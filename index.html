@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FRNKL — Nicole Frenkel</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --peach:#F4DCBE; --cream:#FAF2E6; --peri:#C7CDE6; --peri-dp:#A9B2DC;
+    --orange:#E5652A; --orange-dk:#C64F1C; --brick:#B04A38; --lime:#B9E85C;
+    --ink:#1A1712; --ink-soft:#4C463C; --muted:#948B79; --line:#E9E0D0;
+    --font-primary:"Galano Grotesque","Poppins",system-ui,-apple-system,sans-serif;
+    --font-body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font:var(--font-body);
+    --maxw:1120px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  [hidden]{ display:none !important; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:var(--font); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;
+    min-height:100vh; position:relative; overflow-x:hidden;
+    background:linear-gradient(135deg,var(--peach) 0%,var(--cream) 40%,#F1ECE4 56%,var(--peri) 100%);
+    background-attachment:fixed;
+  }
+  .aura{ position:fixed; top:-20vw; right:-12vw; width:76vw; height:76vw; z-index:0; pointer-events:none; filter:blur(80px); opacity:.72;
+    background:
+      radial-gradient(36% 36% at 28% 32%,var(--peri-dp) 0%,transparent 70%),
+      radial-gradient(40% 40% at 66% 40%,var(--orange) 0%,transparent 68%),
+      radial-gradient(34% 34% at 50% 70%,var(--lime) 0%,transparent 70%),
+      radial-gradient(38% 38% at 22% 66%,var(--brick) 0%,transparent 72%); }
+  .aura.two{ top:auto; bottom:-26vw; right:auto; left:-16vw; width:60vw; height:60vw; opacity:.55;
+    background:radial-gradient(45% 45% at 40% 40%,var(--peach) 0%,transparent 72%),radial-gradient(40% 40% at 65% 60%,var(--peri-dp) 0%,transparent 72%); }
+  .grain{ position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.055; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+  .wrap{ position:relative; z-index:2; max-width:var(--maxw); margin:0 auto; padding:0 clamp(20px,5vw,48px); }
+  h1,h2,h3,.name,.logo,.btn,.cf-title,.tl-item .role,.marquee-label,.nav-links a,.c-eyebrow,.meta h3,.edu-item .cert,.clink{ font-family:var(--font-primary); }
+
+  /* NAV */
+  nav{ display:flex; align-items:center; justify-content:space-between; padding:30px 0 8px; gap:16px; flex-wrap:wrap; }
+  .logo{ font-weight:700; font-size:23px; letter-spacing:.04em; color:var(--ink); text-decoration:none; display:inline-flex; cursor:pointer; }
+  .logo span{ display:inline-block; transition:transform .3s ease; }
+  .logo .fx{ transform:scaleX(-1); } .logo .fy{ transform:scaleY(-1); }
+  .logo:hover span{ transform:none; }
+  .nav-right{ display:flex; align-items:center; gap:26px; }
+  .nav-links{ display:flex; gap:22px; }
+  .nav-links a{ text-decoration:none; color:var(--ink-soft); font-weight:500; font-size:15px; position:relative; cursor:pointer; }
+  .nav-links a::after{ content:""; position:absolute; left:0; right:100%; bottom:-4px; height:1.5px; background:var(--ink); transition:right .25s ease; }
+  .nav-links a:hover::after,.nav-links a.on::after{ right:0; }
+  .lang{ display:inline-flex; align-items:center; gap:2px; font-size:13px; }
+  .lang button{ border:0; background:transparent; cursor:pointer; color:var(--muted); font-family:inherit; font-weight:600; padding:4px 6px; border-radius:6px; }
+  .lang button.active{ color:var(--ink); background:rgba(26,23,18,.07); }
+  .lang .sep{ color:var(--line); }
+
+  /* HERO (home) */
+  header{ padding:clamp(46px,9vh,96px) 0 clamp(20px,4vh,40px); max-width:940px; }
+  h1{ font-weight:600; font-size:clamp(60px,12vw,132px); line-height:.9; letter-spacing:-.04em; }
+  h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02em; color:var(--ink-soft); margin-top:10px; }
+  .desc{ font-size:clamp(19px,2.3vw,27px); font-weight:500; line-height:1.4; color:var(--ink); margin-top:clamp(45px,8vh,95px); }
+  .strike{ text-decoration:line-through; text-decoration-color:var(--orange); text-decoration-thickness:2.5px; }
+  .hand{ font-family:"Caveat",cursive; font-size:1.42em; font-weight:600; line-height:1; }
+
+  .btns{ display:flex; gap:12px; flex-wrap:wrap; margin-top:26px; }
+  .btn{ display:inline-flex; align-items:center; gap:9px; text-decoration:none; cursor:pointer; font-weight:600; font-size:15.5px; padding:13px 24px; border-radius:100px; border:1px solid transparent; transition:transform .18s ease, background .18s, opacity .18s; }
+  .btn .arw{ transition:transform .2s ease; }
+  .btn:hover .arw{ transform:translateX(3px); }
+  .btn.primary{ background:var(--ink); color:var(--cream); }
+  .btn.primary:hover{ transform:translateY(-2px); background:var(--orange); }
+  .btn.secondary{ background:transparent; color:var(--ink); border-color:var(--ink); }
+  .btn.secondary:hover{ transform:translateY(-2px); background:rgba(26,23,18,.05); }
+
+  .scrollcue{ display:flex; flex-direction:column; align-items:center; gap:6px; width:max-content; margin:clamp(46px,8vh,84px) auto 0; text-decoration:none; color:var(--ink-soft); cursor:pointer; }
+  .scrollcue .cue-label{ font-weight:600; font-size:14px; letter-spacing:.04em; }
+  .scrollcue .arrow{ font-size:20px; animation:bob 1.7s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); opacity:.55 } 50%{ transform:translateY(7px); opacity:1 } }
+
+  .journey{ padding:clamp(30px,5vh,52px) 0 30px; }
+  .teams{ margin-top:clamp(40px,7vh,72px); }
+  .marquee-label{ font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:600; margin:0 0 14px; }
+  .marquee{ position:relative; overflow:hidden; color:var(--ink); padding:6px 0;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); }
+  .marquee:hover .track{ animation-play-state:paused; }
+  .track{ display:flex; width:max-content; white-space:nowrap; animation:scroll 26s linear infinite; }
+  .track span{ font-weight:600; font-size:17px; letter-spacing:.06em; text-transform:uppercase; padding:0 26px; display:inline-flex; align-items:center; gap:26px; }
+  .track span::after{ content:"✦"; font-size:12px; color:var(--orange); }
+  @keyframes scroll{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
+
+  .timeline{ margin-top:44px; display:grid; gap:2px; border-left:2px solid var(--line); padding-left:22px; }
+  .tl-item{ padding:16px 0; }
+  .tl-item .yr{ font-size:13px; color:var(--orange); font-weight:600; letter-spacing:.04em; }
+  .tl-item .role{ font-weight:600; font-size:18px; margin-top:2px; }
+  .tl-item .place{ color:var(--ink-soft); font-size:14px; }
+  .tl-desc{ color:var(--ink-soft); font-size:16px; line-height:1.6; max-width:62ch; margin-top:10px; }
+
+  .meta{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:30px; margin-top:52px; padding-top:36px; border-top:1px solid var(--line); }
+  .meta h3{ font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:12px; }
+  .meta .row{ font-size:15px; margin-bottom:6px; }
+  .edu-item{ margin-bottom:14px; }
+  .edu-item .d{ font-size:13px; color:var(--orange); font-weight:600; letter-spacing:.04em; }
+  .edu-item .cert{ font-weight:600; font-size:15px; margin-top:1px; }
+  .edu-item .inst{ color:var(--ink-soft); font-size:14px; }
+  .edu{ margin-top:40px; padding-top:34px; border-top:1px solid var(--line); }
+  .edu h3{ font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:16px; font-family:var(--font-primary); }
+  .edu-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px 30px; }
+
+  /* CONTACT (dark) */
+  .contact{ background:var(--ink); color:var(--cream); border-radius:28px; padding:clamp(52px,9vw,104px) clamp(24px,5vw,48px); margin-top:clamp(52px,9vh,96px); text-align:center; }
+  .contact .logo.big{ color:var(--cream); font-size:clamp(46px,9vw,92px); justify-content:center; margin:0 auto 22px; }
+  .contact h2{ color:var(--cream); font-weight:600; font-size:clamp(30px,5vw,54px); letter-spacing:-.03em; line-height:1.05; margin:0 auto; }
+  .contact p{ color:#CFC7BA; margin:14px auto 0; max-width:36ch; font-size:17px; line-height:1.5; }
+  .mail-link{ display:inline-block; margin-top:30px; color:var(--cream); text-decoration:none; font-weight:600; font-size:clamp(17px,2vw,20px); border-bottom:2px solid var(--orange); padding-bottom:3px; transition:color .18s, border-color .18s; }
+  .mail-link:hover{ color:var(--orange); }
+
+  footer{ padding:30px 0 60px; display:flex; justify-content:space-between; align-items:center; gap:16px 24px; flex-wrap:wrap; color:var(--muted); font-size:14px; margin-top:22px; border-top:1px solid var(--line); }
+  footer .flinks{ display:flex; gap:22px; flex-wrap:wrap; }
+  footer a{ color:var(--ink-soft); text-decoration:none; } footer a:hover{ color:var(--ink); }
+
+  /* PROJECTS view */
+  .phead{ text-align:center; padding:clamp(30px,6vh,60px) 0 0; }
+  .phead h1{ font-weight:600; font-size:clamp(38px,6.5vw,72px); letter-spacing:-.03em; line-height:1; }
+  .phead p{ color:var(--ink-soft); margin-top:12px; font-size:15px; }
+  .stage{ position:relative; height:min(64vh,520px); margin-top:clamp(28px,5vh,60px); perspective:1400px; }
+  .cf-title{ text-align:center; max-width:30ch; margin:22px auto 0; font-weight:600; font-size:clamp(26px,3.6vw,42px); letter-spacing:-.025em; line-height:1.15; color:var(--ink); }
+  .cf-card{ position:absolute; top:50%; left:50%; width:clamp(240px,30vw,330px); aspect-ratio:3/4;
+    border-radius:20px; overflow:hidden; background:#fff; border:1px solid var(--line);
+    box-shadow:0 30px 60px -30px rgba(90,60,30,.6);
+    transform-style:preserve-3d; transition:transform .5s cubic-bezier(.22,.61,.36,1), opacity .5s, filter .5s;
+    cursor:pointer; will-change:transform; }
+  .cf-card .cover{ height:66%; position:relative; }
+  .cf-card:nth-child(4n+1) .cover{ background:linear-gradient(135deg,var(--peach),#F7EEDF); }
+  .cf-card:nth-child(4n+2) .cover{ background:linear-gradient(135deg,#DFE4F2,#F1F0F4); }
+  .cf-card:nth-child(4n+3) .cover{ background:linear-gradient(135deg,#F6DCCB,#F8EEE6); }
+  .cf-card:nth-child(4n)   .cover{ background:linear-gradient(135deg,#E6EFCF,#F4F2E6); }
+  .cf-card .cover span{ position:absolute; left:16px; bottom:12px; font-size:12px; color:var(--ink-soft); opacity:.7; }
+  .cf-card .cbody{ padding:16px 18px; }
+  .cf-card .ctitle{ font-weight:600; font-size:19px; letter-spacing:-.01em; }
+  .cf-card .crole{ color:var(--ink-soft); font-size:13.5px; margin-top:4px; }
+  .controls{ display:flex; align-items:center; justify-content:center; gap:18px; margin-top:22px; }
+  .nav-btn{ width:52px; height:52px; border-radius:50%; border:1px solid var(--ink); background:transparent; color:var(--ink); font-size:20px; cursor:pointer; display:grid; place-items:center; transition:background .18s, color .18s, transform .18s; }
+  .nav-btn:hover{ background:var(--ink); color:var(--cream); transform:translateY(-2px); }
+  .dots{ display:flex; gap:8px; }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--line); border:0; padding:0; cursor:pointer; transition:background .2s, transform .2s; }
+  .dot.active{ background:var(--orange); transform:scale(1.3); }
+  .hint{ text-align:center; color:var(--muted); font-size:13px; margin-top:14px; }
+  .backlink{ display:inline-flex; gap:8px; align-items:center; text-decoration:none; color:var(--ink-soft); font-weight:600; font-size:15px; margin:40px 0 60px; cursor:pointer; }
+  .backlink:hover{ color:var(--ink); }
+
+  /* BOTTOM SHEET */
+  .backdrop{ position:fixed; inset:0; background:rgba(26,23,18,.42); opacity:0; pointer-events:none; transition:opacity .3s; z-index:60; }
+  .backdrop.open{ opacity:1; pointer-events:auto; }
+  .sheet{ position:fixed; left:0; right:0; bottom:0; z-index:70; background:var(--cream); border-radius:26px 26px 0 0;
+    box-shadow:0 -24px 70px -24px rgba(90,60,30,.55); transform:translateY(101%); transition:transform .42s cubic-bezier(.22,.61,.36,1);
+    max-height:88vh; overflow-y:auto; }
+  .sheet.open{ transform:translateY(0); }
+  .sheet-inner{ position:relative; max-width:var(--maxw); margin:0 auto; padding:16px clamp(20px,5vw,48px) 54px; }
+  .handle{ width:46px; height:5px; border-radius:99px; background:var(--line); margin:0 auto 22px; }
+  .close{ position:absolute; top:14px; right:clamp(20px,5vw,48px); width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:transparent; color:var(--ink); font-size:14px; cursor:pointer; transition:background .18s, color .18s; }
+  .close:hover{ background:var(--ink); color:var(--cream); }
+  .sheet .sheet-role{ color:var(--orange); font-weight:600; font-size:14px; letter-spacing:.03em; }
+  .sheet h2{ font-weight:600; font-size:clamp(28px,4vw,44px); letter-spacing:-.02em; margin-top:4px; }
+  .sheet .sheet-desc{ color:var(--ink-soft); max-width:62ch; margin-top:14px; font-size:16px; line-height:1.6; }
+  .photos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin-top:26px; }
+  .photo{ aspect-ratio:4/3; border-radius:16px; display:grid; place-items:center; color:var(--ink-soft); font-size:13px; border:1px solid var(--line); }
+  .photo:nth-child(4n+1){ background:linear-gradient(135deg,var(--peach),#F7EEDF); }
+  .photo:nth-child(4n+2){ background:linear-gradient(135deg,#DFE4F2,#F1F0F4); }
+  .photo:nth-child(4n+3){ background:linear-gradient(135deg,#F6DCCB,#F8EEE6); }
+  .photo:nth-child(4n){ background:linear-gradient(135deg,#E6EFCF,#F4F2E6); }
+
+  @media (max-width:760px){ .nav-links{ gap:16px; } .edu-grid{ grid-template-columns:1fr; } }
+  @media (prefers-reduced-motion:reduce){ *{ transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
+  :focus-visible{ outline:2px solid var(--orange); outline-offset:3px; border-radius:4px; }
+</style>
+</head>
+<body>
+  <div class="aura"></div><div class="aura two"></div><div class="grain"></div>
+
+  <div class="wrap">
+    <nav id="top">
+      <a class="logo" data-nav="home" aria-label="FRNKL">
+        <span class="fx">F</span><span class="fx">R</span><span class="fx">N</span><span>K</span><span class="fy">L</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a class="on" data-nav="home" data-en="Home" data-es="Inicio">Home</a>
+          <a data-nav="journey" data-en="My journey" data-es="Mi recorrido">My journey</a>
+          <a data-nav="projects" data-en="Selected projects" data-es="Proyectos">Selected projects</a>
+          <a data-nav="contact" data-en="Contact" data-es="Contacto">Contact</a>
+        </div>
+        <div class="lang" role="group" aria-label="language">
+          <button data-lang="en" class="active">EN</button><span class="sep">/</span><button data-lang="es">ES</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ===================== HOME VIEW ===================== -->
+    <main id="view-home">
+      <header>
+        <h1 data-en="Hello!" data-es="¡Hola!">Hello!</h1>
+        <h2 class="name" data-en="— It's Nicole" data-es="— Soy Nicole">— It's Nicole</h2>
+
+        <p class="desc"
+           data-en="5 years in UX/UI<br>8 in product design<br>and a lifetime caring about details <span class='hand'>(and cats)</span>."
+           data-es="5 años en UX/UI<br>8 en diseño de producto<br>y toda una vida cuidando los detalles <span class='hand'>(y los gatos)</span>.">
+           5 years in UX/UI<br>8 in product design<br>and a lifetime caring about details <span class="hand">(and cats)</span>.
+        </p>
+
+        <div class="btns">
+          <a class="btn primary" data-nav="projects" data-en="Selected projects <span class='arw'>→</span>" data-es="Proyectos seleccionados <span class='arw'>→</span>">Selected projects <span class="arw">→</span></a>
+          <a class="btn secondary" data-nav="contact" data-en="Get in touch" data-es="Contactame">Get in touch</a>
+        </div>
+
+      </header>
+
+      <section class="teams">
+        <div class="marquee-label" data-en="The teams I've been part of" data-es="Los equipos de los que formé parte">The teams I've been part of</div>
+        <div class="marquee" aria-label="teams">
+          <div class="track">
+            <span>Tietoevry · UHC</span><span>Galicia Bank</span><span>Miller Zell</span><span>Carestino</span><span>Third Term</span><span>Bleet</span><span>Debute</span>
+            <span>Tietoevry · UHC</span><span>Galicia Bank</span><span>Miller Zell</span><span>Carestino</span><span>Third Term</span><span>Bleet</span><span>Debute</span>
+          </div>
+        </div>
+      </section>
+
+      <a class="scrollcue" data-nav="journey" aria-label="scroll to My journey">
+        <span class="cue-label" data-en="My journey" data-es="Mi recorrido">My journey</span>
+        <span class="arrow" aria-hidden="true">↓</span>
+      </a>
+
+      <section class="journey" id="journey">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="yr" data-en="June 2024 — Present" data-es="Junio 2024 — Presente">June 2024 — Present</div>
+            <div class="role" data-en="Senior UX/UI Designer" data-es="Diseñadora Senior UX/UI">Senior UX/UI Designer</div>
+            <div class="place">Tietoevry (UHC)</div>
+            <p class="tl-desc" data-en="Senior UX Designer collaborating with a large U.S. healthcare provider to improve onboarding experiences for medical professionals in a regulated environment. I led discovery — stakeholder interviews, documentation analysis, and group usability testing — and translated insights into clear, efficient onboarding flows. I owned the full UX process (discovery, flow definition, information architecture, wireframing, prototyping, and usability testing) for a mobile app built from scratch, and redesigned the design system to support a new product experience while staying cohesive with the existing brand — ensuring scalability and consistency across touchpoints. Day to day, I simplify complex workflows, reduce friction, and improve usability across desktop and responsive interfaces, working iteratively with cross-functional teams (product, engineering, stakeholders) to balance user needs, business goals, and healthcare constraints." data-es="Diseñadora UX Senior colaborando con un gran proveedor de salud de EE.UU. para mejorar la experiencia de onboarding de profesionales médicos en un entorno regulado. Lideré el discovery —entrevistas con stakeholders, análisis de documentación y usability testing grupal— y traduje los insights en flujos de onboarding claros y eficientes. Fui dueña de todo el proceso UX (discovery, definición de flujos, arquitectura de información, wireframing, prototipado y testing) de una app mobile hecha desde cero, y rediseñé el design system para soportar una nueva experiencia manteniendo coherencia con la marca — asegurando escalabilidad y consistencia. En el día a día simplifico flujos complejos, reduzco fricción y mejoro la usabilidad en desktop y responsive, trabajando de forma iterativa con equipos cross-funcionales (producto, ingeniería, stakeholders) para equilibrar necesidades del usuario, objetivos de negocio y restricciones del sector salud.">Senior UX Designer collaborating with a large U.S. healthcare provider to improve onboarding experiences for medical professionals in a regulated environment. I led discovery — stakeholder interviews, documentation analysis, and group usability testing — and translated insights into clear, efficient onboarding flows. I owned the full UX process (discovery, flow definition, information architecture, wireframing, prototyping, and usability testing) for a mobile app built from scratch, and redesigned the design system to support a new product experience while staying cohesive with the existing brand — ensuring scalability and consistency across touchpoints. Day to day, I simplify complex workflows, reduce friction, and improve usability across desktop and responsive interfaces, working iteratively with cross-functional teams (product, engineering, stakeholders) to balance user needs, business goals, and healthcare constraints.</p>
+          </div>
+          <div class="tl-item">
+            <div class="yr" data-en="May 2022 — Present" data-es="Mayo 2022 — Presente">May 2022 — Present</div>
+            <div class="role" data-en="Freelance — Senior UX/UI Designer" data-es="Freelance — Diseñadora Senior UX/UI">Freelance — Senior UX/UI Designer</div>
+            <div class="place">Beett · Third Term · Miller Zell · DMO</div>
+            <p class="tl-desc" data-en="I've worked across a wide range of digital products — from corporate training experiences and communication bots to user flows and visual systems that improve how people interact with technology. I've contributed to health-related products, including a medical app and a migraine-treatment solution for large pharmaceutical companies, as well as consumer wellness branding. Most recently I worked on a content-driven mobile app for marketing professionals — sharing articles, videos, and location-based recommendations through an interactive map, helping teams document experiences, showcase atmosphere and design details, and inspire others through real-world insights." data-es="Trabajé en una amplia variedad de productos digitales — desde experiencias de capacitación corporativa y bots de comunicación hasta flujos de usuario y sistemas visuales que mejoran cómo las personas interactúan con la tecnología. Contribuí en productos de salud, incluyendo una app médica y una solución para el tratamiento de la migraña para grandes farmacéuticas, además de branding de wellness de consumo. Hace poco trabajé en una app mobile de contenidos para profesionales de marketing — compartiendo artículos, videos y recomendaciones por ubicación mediante un mapa interactivo, ayudando a los equipos a documentar experiencias, mostrar ambientes y detalles de diseño, e inspirar a otros con insights del mundo real.">I've worked across a wide range of digital products — from corporate training experiences and communication bots to user flows and visual systems that improve how people interact with technology. I've contributed to health-related products, including a medical app and a migraine-treatment solution for large pharmaceutical companies, as well as consumer wellness branding. Most recently I worked on a content-driven mobile app for marketing professionals — sharing articles, videos, and location-based recommendations through an interactive map, helping teams document experiences, showcase atmosphere and design details, and inspire others through real-world insights.</p>
+          </div>
+          <div class="tl-item">
+            <div class="yr" data-en="May 2022 — June 2024" data-es="Mayo 2022 — Junio 2024">May 2022 — June 2024</div>
+            <div class="role" data-en="UX/UI Designer" data-es="Diseñadora UX/UI">UX/UI Designer</div>
+            <div class="place">Galicia Bank</div>
+            <p class="tl-desc" data-en="UX/UI Designer within the Payments stream of a large-scale banking app, designing high-impact, transaction-critical experiences. I analyzed user behavior with tools like Hotjar, authored UX briefs, mapped user flows, and designed from wireframes to high-fidelity interactive prototypes. I led the UX design of a new banking product end-to-end — from research and proto-persona definition to information architecture, UI design, and usability testing — collaborating closely with product and engineering to ensure usability, consistency, and alignment with business and regulatory requirements." data-es="Diseñadora UX/UI dentro del stream de Pagos de una app bancaria a gran escala, diseñando experiencias de alto impacto y críticas para las transacciones. Analicé el comportamiento de los usuarios con herramientas como Hotjar, escribí briefs de UX, mapeé flujos y diseñé desde wireframes hasta prototipos interactivos de alta fidelidad. Lideré el diseño UX de un nuevo producto bancario de punta a punta —desde la investigación y la definición de proto-personas hasta la arquitectura de información, el diseño UI y el usability testing— colaborando de cerca con producto e ingeniería para asegurar usabilidad, consistencia y alineación con los requisitos de negocio y regulatorios.">UX/UI Designer within the Payments stream of a large-scale banking app, designing high-impact, transaction-critical experiences. I analyzed user behavior with tools like Hotjar, authored UX briefs, mapped user flows, and designed from wireframes to high-fidelity interactive prototypes. I led the UX design of a new banking product end-to-end — from research and proto-persona definition to information architecture, UI design, and usability testing — collaborating closely with product and engineering to ensure usability, consistency, and alignment with business and regulatory requirements.</p>
+          </div>
+          <div class="tl-item">
+            <div class="yr" data-en="February 2021 — January 2024" data-es="Febrero 2021 — Enero 2024">February 2021 — January 2024</div>
+            <div class="role" data-en="Senior Product Designer" data-es="Diseñadora Senior de Producto">Senior Product Designer</div>
+            <div class="place">Carestino</div>
+            <p class="tl-desc" data-en="Responsible for adapting and redesigning products originally manufactured in China for multiple Latin American markets. I led product modifications to meet local regulatory requirements and cultural expectations across countries, ensuring compliance, usability, and market acceptance. My work spanned physical and digital touchpoints — redesigning product features, updating technical specifications, and adapting supporting assets like websites and user manuals. I collaborated with cross-functional teams so each market version reflected local language nuances, cultural context, and usage patterns, recognizing that even shared languages require distinct design considerations to earn adoption and trust." data-es="Responsable de adaptar y rediseñar productos fabricados originalmente en China para múltiples mercados de Latinoamérica. Lideré modificaciones de producto para cumplir requisitos regulatorios locales y expectativas culturales en distintos países, asegurando compliance, usabilidad y aceptación en el mercado. Mi trabajo abarcó touchpoints físicos y digitales — rediseñando características de producto, actualizando especificaciones técnicas y adaptando materiales de soporte como sitios web y manuales. Colaboré con equipos cross-funcionales para que cada versión reflejara los matices del idioma local, el contexto cultural y los patrones de uso, entendiendo que incluso idiomas compartidos requieren consideraciones de diseño distintas para ganar adopción y confianza.">Responsible for adapting and redesigning products originally manufactured in China for multiple Latin American markets. I led product modifications to meet local regulatory requirements and cultural expectations across countries, ensuring compliance, usability, and market acceptance. My work spanned physical and digital touchpoints — redesigning product features, updating technical specifications, and adapting supporting assets like websites and user manuals. I collaborated with cross-functional teams so each market version reflected local language nuances, cultural context, and usage patterns, recognizing that even shared languages require distinct design considerations to earn adoption and trust.</p>
+          </div>
+        </div>
+
+        <div class="meta">
+          <div>
+            <h3 data-en="Based in" data-es="Ubicación">Based in</h3>
+            <div class="row">Buenos Aires, Argentina</div>
+          </div>
+          <div>
+            <h3 data-en="Languages" data-es="Idiomas">Languages</h3>
+            <div class="row" data-en="Spanish — Native" data-es="Español — Nativo">Spanish — Native</div>
+            <div class="row" data-en="English — C1" data-es="Inglés — C1">English — C1</div>
+          </div>
+        </div>
+
+        <div class="edu">
+          <h3 data-en="Education" data-es="Formación">Education</h3>
+          <div class="edu-grid">
+            <div class="edu-item"><div class="d">20XX</div><div class="cert" data-en="Certification name" data-es="Nombre de la certificación">Certification name</div><div class="inst" data-en="Institution" data-es="Institución">Institution</div></div>
+            <div class="edu-item"><div class="d">20XX</div><div class="cert" data-en="Certification name" data-es="Nombre de la certificación">Certification name</div><div class="inst" data-en="Institution" data-es="Institución">Institution</div></div>
+            <div class="edu-item"><div class="d">20XX</div><div class="cert" data-en="Certification name" data-es="Nombre de la certificación">Certification name</div><div class="inst" data-en="Institution" data-es="Institución">Institution</div></div>
+            <div class="edu-item"><div class="d">20XX</div><div class="cert" data-en="Certification name" data-es="Nombre de la certificación">Certification name</div><div class="inst" data-en="Institution" data-es="Institución">Institution</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT (dark, simple, logo as centrepiece) -->
+      <section class="contact" id="contact">
+        <a class="logo big" data-nav="home" aria-label="FRNKL">
+          <span class="fx">F</span><span class="fx">R</span><span class="fx">N</span><span>K</span><span class="fy">L</span>
+        </a>
+        <h2 data-en="Get in touch" data-es="Contactame">Get in touch</h2>
+        <p data-en="Let's design thoughtful experiences together." data-es="Diseñemos experiencias con intención, juntas.">Let's design thoughtful experiences together.</p>
+        <a class="mail-link" href="mailto:niki.frenkel@gmail.com">niki.frenkel@gmail.com</a>
+      </section>
+
+      <footer>
+        <span>© 2026 Nicole Frenkel</span>
+        <div class="flinks">
+          <a href="mailto:niki.frenkel@gmail.com">niki.frenkel@gmail.com</a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://www.behance.net/nicolefrenkel" target="_blank" rel="noopener">Behance</a>
+        </div>
+      </footer>
+    </main>
+
+    <!-- ===================== PROJECTS VIEW ===================== -->
+    <main id="view-projects" hidden>
+      <div class="stage" id="stage" aria-roledescription="carousel"></div>
+      <h2 class="cf-title" data-en="Eight years designing meaningful products, and five intuitive interfaces." data-es="Ocho años diseñando productos con sentido, y cinco interfaces intuitivas.">Eight years designing meaningful products, and five intuitive interfaces.</h2>
+      <div class="controls">
+        <div class="dots" id="dots"></div>
+      </div>
+      <div style="text-align:center">
+        <a class="backlink" data-nav="home" data-en="← Back home" data-es="← Volver al inicio">← Back home</a>
+      </div>
+    </main>
+  </div>
+
+  <!-- BOTTOM SHEET -->
+  <div class="backdrop" id="backdrop"></div>
+  <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="project details">
+    <div class="sheet-inner">
+      <div class="handle"></div>
+      <button class="close" id="closeSheet" aria-label="close">✕</button>
+      <div class="sheet-role" id="sheetRole"></div>
+      <h2 id="sheetTitle"></h2>
+      <p class="sheet-desc" id="sheetDesc"></p>
+      <div class="photos" id="sheetPhotos"></div>
+    </div>
+  </aside>
+
+<script>
+  let lang='en', current=0, sheetOpen=false, timer=null, dragged=false, startX=null;
+
+  const viewHome=document.getElementById('view-home');
+  const viewProjects=document.getElementById('view-projects');
+  function showView(v, anchor){
+    const onProjects = v==='projects';
+    viewProjects.hidden = !onProjects;
+    viewHome.hidden = onProjects;
+    document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('on', a.dataset.nav===v));
+    if(onProjects){ render(); play(); } else { stop(); }
+    if(anchor){ const el=document.getElementById(anchor); if(el){ setTimeout(()=>el.scrollIntoView({behavior:'smooth'}),20); return; } }
+    window.scrollTo({top:0, behavior:'auto'});
+  }
+  document.querySelectorAll('[data-nav]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.preventDefault();
+      const t=el.dataset.nav;
+      if(t==='projects') showView('projects');
+      else if(t==='journey') showView('home','journey');
+      else if(t==='contact') showView('home','contact');
+      else showView('home');
+    });
+  });
+
+  const projects = [
+    { title:"Banco Galicia", role_en:"Product · UX/UI · fintech", role_es:"Producto · UX/UI · fintech",
+      desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome (with a metric if you have one).",
+      desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones y trade-offs clave, y el resultado (con una métrica si tenés)." },
+    { title:"UHC · Tietoevry", role_en:"UX · US healthcare", role_es:"UX · salud EE.UU.",
+      desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome.",
+      desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones clave y el resultado." },
+    { title:"Carestino", role_en:"E-commerce · UX/UI", role_es:"E-commerce · UX/UI",
+      desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
+      desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
+    { title:"Miller Zell", role_en:"Retail experience", role_es:"Experiencia retail",
+      desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
+      desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
+    { title:"Bleet", role_en:"Product design", role_es:"Diseño de producto",
+      desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
+      desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
+    { title:"Debute", role_en:"Furniture · industrial", role_es:"Mobiliario · industrial",
+      desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
+      desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
+  ];
+  const stage=document.getElementById('stage'), dotsWrap=document.getElementById('dots');
+  projects.forEach((p,i)=>{
+    const c=document.createElement('div'); c.className='cf-card';
+    c.innerHTML=`<div class="cover"><span data-en="cover →" data-es="portada →">cover →</span></div>
+      <div class="cbody"><div class="ctitle">${p.title}</div><div class="crole" data-en="${p.role_en}" data-es="${p.role_es}">${p.role_en}</div></div>`;
+    c.addEventListener('click',()=>{ if(!dragged) openSheet(i); });
+    stage.appendChild(c);
+    const d=document.createElement('button'); d.className='dot'; d.setAttribute('aria-label','go to '+p.title);
+    d.addEventListener('click',()=>{ current=i; render(); play(); });
+    dotsWrap.appendChild(d);
+  });
+  const cards=[...stage.children], dots=[...dotsWrap.children], n=cards.length;
+
+  function render(){
+    cards.forEach((c,i)=>{
+      let o=i-current; if(o>n/2)o-=n; if(o<-n/2)o+=n;
+      const abs=Math.abs(o);
+      const x=o*(window.innerWidth<640?150:240);
+      const rotY=o===0?0:(o<0?42:-42);
+      const z=-abs*170, scale=o===0?1:0.82;
+      c.style.transform=`translate(-50%,-50%) translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`;
+      c.style.opacity=abs>2?0:1;
+      c.style.filter=o===0?'none':'brightness(.92) saturate(.9)';
+      c.style.zIndex=50-abs; c.style.pointerEvents=abs>2?'none':'auto';
+    });
+    dots.forEach((d,i)=>d.classList.toggle('active',i===current));
+  }
+  function play(){ stop(); if(!sheetOpen && !viewProjects.hidden) timer=setInterval(()=>{ current=(current+1)%n; render(); },2200); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+  stage.addEventListener('mouseenter',stop);
+  stage.addEventListener('mouseleave',()=>{ if(!sheetOpen) play(); });
+
+  window.addEventListener('keydown',e=>{
+    if(viewProjects.hidden) return;
+    if(e.key==='ArrowLeft'){current=(current-1+n)%n;render();play();}
+    if(e.key==='ArrowRight'){current=(current+1)%n;render();play();}
+    if(e.key==='Escape') closeSheet();
+  });
+  stage.addEventListener('pointerdown',e=>{ startX=e.clientX; dragged=false; });
+  stage.addEventListener('pointermove',e=>{ if(startX!==null && Math.abs(e.clientX-startX)>8) dragged=true; });
+  window.addEventListener('pointerup',e=>{
+    if(startX===null) return;
+    const dx=e.clientX-startX;
+    if(dx>60){ current=(current-1+n)%n; render(); play(); }
+    else if(dx<-60){ current=(current+1)%n; render(); play(); }
+    startX=null; setTimeout(()=>{ dragged=false; },0);
+  });
+
+  const sheet=document.getElementById('sheet'), backdrop=document.getElementById('backdrop');
+  function openSheet(i){
+    current=i; render();
+    const p=projects[i];
+    document.getElementById('sheetRole').textContent=lang==='es'?p.role_es:p.role_en;
+    document.getElementById('sheetTitle').textContent=p.title;
+    document.getElementById('sheetDesc').textContent=lang==='es'?p.desc_es:p.desc_en;
+    const ph=document.getElementById('sheetPhotos'); ph.innerHTML='';
+    for(let k=0;k<4;k++){ const d=document.createElement('div'); d.className='photo'; d.textContent=lang==='es'?'foto':'photo'; ph.appendChild(d); }
+    sheetOpen=true; stop();
+    sheet.classList.add('open'); backdrop.classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeSheet(){
+    if(!sheetOpen) return;
+    sheetOpen=false; sheet.classList.remove('open'); backdrop.classList.remove('open'); document.body.style.overflow=''; play();
+  }
+  document.getElementById('closeSheet').addEventListener('click',closeSheet);
+  backdrop.addEventListener('click',closeSheet);
+
+  document.querySelectorAll('.lang button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      lang=btn.dataset.lang;
+      document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('active',b===btn));
+      document.documentElement.lang=lang;
+      document.querySelectorAll('[data-en]').forEach(el=>{ el.innerHTML=el.dataset[lang]; });
+      if(sheetOpen) openSheet(current);
+    });
+  });
+
+  window.addEventListener('resize',render);
+  render();   // prime the carousel (stays paused until the projects view is shown)
+</script>
+</body>
+</html>
