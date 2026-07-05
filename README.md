@@ -56,9 +56,10 @@ python3 -m http.server 8787
 
 ## Deploy a Vercel
 
-Al ser HTML estático sin build, Vercel debería detectarlo sin necesidad de
-`vercel.json` (framework preset: "Other" / estático). Pasos esperados:
+Al ser HTML estático sin build, Vercel lo detecta sin necesidad de
+`vercel.json` (framework preset: "Other" / estático).
 
-1. Repo en GitHub: `git@github.com:pulpobober/portfolioNiki.git` (remote
-   `origin`, branch `main`).
-2. Conectar ese repo desde el dashboard de Vercel ("Import Project").
+- Repo en GitHub: `git@github.com:pulpobober/portfolioNiki.git` (remote
+  `origin`, branch `main`).
+- Repo ya conectado a Vercel vía dashboard ("Import Project"). Cada push a
+  `main` dispara un deploy automático.
