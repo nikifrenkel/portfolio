@@ -6,34 +6,18 @@
    Los textos de la home (hero, timeline, contacto) están en
    index.html con atributos data-en / data-es.
 
+   El sitio es UNA sola página con secciones (#home, #journey,
+   #projects, #contact). El topbar usa anchors (#seccion) que
+   scrollean dentro de la misma página. En mobile el topbar
+   colapsa en un menú hamburguesa.
+
    NOTA: este archivo usa la variable `projects`, que se define en
    content.js. Por eso en index.html content.js se carga ANTES que app.js.
    ============================================================ */
 
-let lang='en', current=0, sheetOpen=false, timer=null, dragged=false, startX=null;
+let lang='en', current=0, sheetOpen=false, timer=null, dragged=false, startX=null, projectsInView=false;
 
-const viewHome=document.getElementById('view-home');
-const viewProjects=document.getElementById('view-projects');
-function showView(v, anchor){
-  const onProjects = v==='projects';
-  viewProjects.hidden = !onProjects;
-  viewHome.hidden = onProjects;
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('on', a.dataset.nav===v));
-  if(onProjects){ render(); play(); } else { stop(); }
-  if(anchor){ const el=document.getElementById(anchor); if(el){ setTimeout(()=>el.scrollIntoView({behavior:'smooth'}),20); return; } }
-  window.scrollTo({top:0, behavior:'auto'});
-}
-document.querySelectorAll('[data-nav]').forEach(el=>{
-  el.addEventListener('click',e=>{
-    e.preventDefault();
-    const t=el.dataset.nav;
-    if(t==='projects') showView('projects');
-    else if(t==='journey') showView('home','journey');
-    else if(t==='contact') showView('home','contact');
-    else showView('home');
-  });
-});
-
+/* ---------- Carrusel ---------- */
 const stage=document.getElementById('stage'), dotsWrap=document.getElementById('dots');
 projects.forEach((p,i)=>{
   const c=document.createElement('div'); c.className='cf-card';
@@ -61,17 +45,32 @@ function render(){
   });
   dots.forEach((d,i)=>d.classList.toggle('active',i===current));
 }
-function play(){ stop(); if(!sheetOpen && !viewProjects.hidden) timer=setInterval(()=>{ current=(current+1)%n; render(); },2200); }
+/* Cadencia igualada al marquee de "teams" de la home: ese marquee recorre
+   7 nombres en 26s (~3.7s por ítem), así que el carrusel avanza una card
+   cada ~3.7s para que se sienta a la misma velocidad. */
+function play(){ stop(); if(!sheetOpen && projectsInView) timer=setInterval(()=>{ current=(current+1)%n; render(); },3700); }
 function stop(){ if(timer){ clearInterval(timer); timer=null; } }
 stage.addEventListener('mouseenter',stop);
 stage.addEventListener('mouseleave',()=>{ if(!sheetOpen) play(); });
 
+/* El carrusel sólo autoavanza (y responde a las flechas) cuando
+   la sección de proyectos está a la vista. */
+const projectsSection=document.getElementById('projects');
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ projectsInView=e.isIntersecting; if(projectsInView) play(); else stop(); });
+},{threshold:0.25}).observe(projectsSection);
+
 window.addEventListener('keydown',e=>{
-  if(viewProjects.hidden) return;
+  if(e.key==='Escape'){ closeSheet(); return; }
+  if(!projectsInView) return;
   if(e.key==='ArrowLeft'){current=(current-1+n)%n;render();play();}
   if(e.key==='ArrowRight'){current=(current+1)%n;render();play();}
-  if(e.key==='Escape') closeSheet();
 });
+/* Flechas laterales: avanzan/retroceden el carrusel al tocarlas. */
+const prevBtn=document.getElementById('prev'), nextBtn=document.getElementById('next');
+if(prevBtn) prevBtn.addEventListener('click',()=>{ current=(current-1+n)%n; render(); play(); });
+if(nextBtn) nextBtn.addEventListener('click',()=>{ current=(current+1)%n; render(); play(); });
+
 stage.addEventListener('pointerdown',e=>{ startX=e.clientX; dragged=false; });
 stage.addEventListener('pointermove',e=>{ if(startX!==null && Math.abs(e.clientX-startX)>8) dragged=true; });
 window.addEventListener('pointerup',e=>{
@@ -82,6 +81,7 @@ window.addEventListener('pointerup',e=>{
   startX=null; setTimeout(()=>{ dragged=false; },0);
 });
 
+/* ---------- Bottom sheet (detalle de proyecto) ---------- */
 const sheet=document.getElementById('sheet'), backdrop=document.getElementById('backdrop');
 function openSheet(i){
   current=i; render();
@@ -101,6 +101,34 @@ function closeSheet(){
 document.getElementById('closeSheet').addEventListener('click',closeSheet);
 backdrop.addEventListener('click',closeSheet);
 
+/* ---------- Navegación en la misma página + menú mobile ---------- */
+const navLinks=document.getElementById('navLinks');
+const navToggle=document.getElementById('navToggle');
+function closeMenu(){ navLinks.classList.remove('open'); navToggle.setAttribute('aria-expanded','false'); }
+navToggle.addEventListener('click',()=>{
+  const open=navLinks.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', open?'true':'false');
+});
+/* Cualquier anchor interno cierra el menú; el href #seccion hace el
+   scroll suave nativo (scroll-behavior:smooth + scroll-margin-top). */
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',closeMenu));
+/* Tocar fuera del menú abierto lo cierra. */
+document.addEventListener('click',e=>{
+  if(!navToggle.contains(e.target) && !navLinks.contains(e.target)) closeMenu();
+});
+
+/* ---------- Scrollspy: marca la sección activa en el topbar ---------- */
+const sections=['home','journey','projects','contact'].map(id=>document.getElementById(id)).filter(Boolean);
+const spy=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const id=e.target.id;
+    document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('on', a.dataset.nav===id));
+  });
+},{rootMargin:'-45% 0px -50% 0px', threshold:0});
+sections.forEach(s=>spy.observe(s));
+
+/* ---------- Idioma ---------- */
 document.querySelectorAll('.lang button').forEach(btn=>{
   btn.addEventListener('click',()=>{
     lang=btn.dataset.lang;
@@ -112,4 +140,4 @@ document.querySelectorAll('.lang button').forEach(btn=>{
 });
 
 window.addEventListener('resize',render);
-render();   // prime the carousel (stays paused until the projects view is shown)
+render();   // prime the carousel (autoplay stays paused until #projects is in view)

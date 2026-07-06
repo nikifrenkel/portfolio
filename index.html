@@ -17,24 +17,28 @@
 
   <div class="wrap">
     <nav id="top">
-      <a class="logo" data-nav="home" aria-label="FRNKL">
+      <a class="logo" href="#home" data-nav="home" aria-label="FRNKL">
         <span class="fx">F</span><span class="fx">R</span><span class="fx">N</span><span>K</span><span class="fy">L</span>
       </a>
       <div class="nav-right">
-        <div class="nav-links">
-          <a class="on" data-nav="home" data-en="Home" data-es="Inicio">Home</a>
-          <a data-nav="journey" data-en="My journey" data-es="Mi recorrido">My journey</a>
-          <a data-nav="projects" data-en="Selected projects" data-es="Proyectos">Selected projects</a>
-          <a data-nav="contact" data-en="Contact" data-es="Contacto">Contact</a>
+        <div class="nav-links" id="navLinks">
+          <a class="on" href="#home" data-nav="home" data-en="Home" data-es="Inicio">Home</a>
+          <a href="#journey" data-nav="journey" data-en="Experience" data-es="Experiencia">Experience</a>
+          <a href="#projects" data-nav="projects" data-en="Selected projects" data-es="Proyectos">Selected projects</a>
+          <a href="#contact" data-nav="contact" data-en="Contact" data-es="Contacto">Contact</a>
         </div>
         <div class="lang" role="group" aria-label="language">
           <button data-lang="en" class="active">EN</button><span class="sep">/</span><button data-lang="es">ES</button>
         </div>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </nav>
 
-    <!-- ===================== HOME VIEW ===================== -->
-    <main id="view-home">
+    <main>
+      <!-- ===================== HOME ===================== -->
+      <section id="home">
       <header>
         <h1 data-en="Hello!" data-es="¡Hola!">Hello!</h1>
         <h2 class="name" data-en="— It's Nicole" data-es="— Soy Nicole">— It's Nicole</h2>
@@ -46,8 +50,8 @@
         </p>
 
         <div class="btns">
-          <a class="btn primary" data-nav="projects" data-en="Selected projects <span class='arw'>→</span>" data-es="Proyectos seleccionados <span class='arw'>→</span>">Selected projects <span class="arw">→</span></a>
-          <a class="btn secondary" data-nav="contact" data-en="Get in touch" data-es="Contactame">Get in touch</a>
+          <a class="btn primary" href="#journey" data-nav="journey" data-en="Experience <span class='arw'>→</span>" data-es="Experiencia <span class='arw'>→</span>">Experience <span class="arw">→</span></a>
+          <a class="btn secondary" href="#contact" data-nav="contact" data-en="Get in touch" data-es="Contactame">Get in touch</a>
         </div>
 
       </header>
@@ -62,35 +66,50 @@
         </div>
       </section>
 
-      <a class="scrollcue" data-nav="journey" aria-label="scroll to My journey">
-        <span class="cue-label" data-en="My journey" data-es="Mi recorrido">My journey</span>
-        <span class="arrow" aria-hidden="true">↓</span>
-      </a>
+      </section>
 
+      <!-- ===== CAPA "OVERLAP": sube por encima de Home al hacer scroll ===== -->
+      <div class="overlap">
+      <div class="overlap-inner">
+
+      <!-- ===================== MY JOURNEY (CV) ===================== -->
       <section class="journey" id="journey">
+        <div class="journey-head">
+          <div class="marquee-label" data-en="Experience" data-es="Experiencia">Experience</div>
+          <h2 class="journey-title" data-en="From U.S. healthcare to Argentine finance — <span class='hl'>simplifying complexity through design</span>." data-es="De la salud en EE.UU. a las finanzas argentinas — <span class='hl'>simplificando la complejidad a través del diseño</span>.">From U.S. healthcare to Argentine finance — <span class="hl">simplifying complexity through design</span>.</h2>
+          <a class="btn secondary cv-btn" href="assets/nicole-frenkel-experience.pdf" download data-en="<span class='cv-ico' aria-hidden='true'>↓</span> Download PDF" data-es="<span class='cv-ico' aria-hidden='true'>↓</span> Descargar PDF"><span class="cv-ico" aria-hidden="true">↓</span> Download PDF</a>
+        </div>
         <div class="timeline">
           <div class="tl-item">
-            <div class="yr" data-en="June 2024 — Present" data-es="Junio 2024 — Presente">June 2024 — Present</div>
-            <div class="role" data-en="Senior UX/UI Designer" data-es="Diseñadora Senior UX/UI">Senior UX/UI Designer</div>
-            <div class="place">Tietoevry (UHC)</div>
+            <div class="tl-meta">
+              <div class="role" data-en="Senior UX/UI Designer" data-es="Diseñadora Senior UX/UI">Senior UX/UI Designer</div>
+              <div class="place">Tietoevry (UHC)</div>
+              <div class="yr" data-en="June 2024 — Present" data-es="Junio 2024 — Presente">June 2024 — Present</div>
+            </div>
             <p class="tl-desc" data-en="Senior UX Designer collaborating with a large U.S. healthcare provider to improve onboarding experiences for medical professionals in a regulated environment. I led discovery — stakeholder interviews, documentation analysis, and group usability testing — and translated insights into clear, efficient onboarding flows. I owned the full UX process (discovery, flow definition, information architecture, wireframing, prototyping, and usability testing) for a mobile app built from scratch, and redesigned the design system to support a new product experience while staying cohesive with the existing brand — ensuring scalability and consistency across touchpoints. Day to day, I simplify complex workflows, reduce friction, and improve usability across desktop and responsive interfaces, working iteratively with cross-functional teams (product, engineering, stakeholders) to balance user needs, business goals, and healthcare constraints." data-es="Diseñadora UX Senior colaborando con un gran proveedor de salud de EE.UU. para mejorar la experiencia de onboarding de profesionales médicos en un entorno regulado. Lideré el discovery —entrevistas con stakeholders, análisis de documentación y usability testing grupal— y traduje los insights en flujos de onboarding claros y eficientes. Fui dueña de todo el proceso UX (discovery, definición de flujos, arquitectura de información, wireframing, prototipado y testing) de una app mobile hecha desde cero, y rediseñé el design system para soportar una nueva experiencia manteniendo coherencia con la marca — asegurando escalabilidad y consistencia. En el día a día simplifico flujos complejos, reduzco fricción y mejoro la usabilidad en desktop y responsive, trabajando de forma iterativa con equipos cross-funcionales (producto, ingeniería, stakeholders) para equilibrar necesidades del usuario, objetivos de negocio y restricciones del sector salud.">Senior UX Designer collaborating with a large U.S. healthcare provider to improve onboarding experiences for medical professionals in a regulated environment. I led discovery — stakeholder interviews, documentation analysis, and group usability testing — and translated insights into clear, efficient onboarding flows. I owned the full UX process (discovery, flow definition, information architecture, wireframing, prototyping, and usability testing) for a mobile app built from scratch, and redesigned the design system to support a new product experience while staying cohesive with the existing brand — ensuring scalability and consistency across touchpoints. Day to day, I simplify complex workflows, reduce friction, and improve usability across desktop and responsive interfaces, working iteratively with cross-functional teams (product, engineering, stakeholders) to balance user needs, business goals, and healthcare constraints.</p>
           </div>
           <div class="tl-item">
-            <div class="yr" data-en="May 2022 — Present" data-es="Mayo 2022 — Presente">May 2022 — Present</div>
-            <div class="role" data-en="Freelance — Senior UX/UI Designer" data-es="Freelance — Diseñadora Senior UX/UI">Freelance — Senior UX/UI Designer</div>
-            <div class="place">Beett · Third Term · Miller Zell · DMO</div>
+            <div class="tl-meta">
+              <div class="role" data-en="Freelance — Senior UX/UI Designer" data-es="Freelance — Diseñadora Senior UX/UI">Freelance — Senior UX/UI Designer</div>
+              <div class="place">Beett · Third Term · Miller Zell · DMO</div>
+              <div class="yr" data-en="May 2022 — Present" data-es="Mayo 2022 — Presente">May 2022 — Present</div>
+            </div>
             <p class="tl-desc" data-en="I've worked across a wide range of digital products — from corporate training experiences and communication bots to user flows and visual systems that improve how people interact with technology. I've contributed to health-related products, including a medical app and a migraine-treatment solution for large pharmaceutical companies, as well as consumer wellness branding. Most recently I worked on a content-driven mobile app for marketing professionals — sharing articles, videos, and location-based recommendations through an interactive map, helping teams document experiences, showcase atmosphere and design details, and inspire others through real-world insights." data-es="Trabajé en una amplia variedad de productos digitales — desde experiencias de capacitación corporativa y bots de comunicación hasta flujos de usuario y sistemas visuales que mejoran cómo las personas interactúan con la tecnología. Contribuí en productos de salud, incluyendo una app médica y una solución para el tratamiento de la migraña para grandes farmacéuticas, además de branding de wellness de consumo. Hace poco trabajé en una app mobile de contenidos para profesionales de marketing — compartiendo artículos, videos y recomendaciones por ubicación mediante un mapa interactivo, ayudando a los equipos a documentar experiencias, mostrar ambientes y detalles de diseño, e inspirar a otros con insights del mundo real.">I've worked across a wide range of digital products — from corporate training experiences and communication bots to user flows and visual systems that improve how people interact with technology. I've contributed to health-related products, including a medical app and a migraine-treatment solution for large pharmaceutical companies, as well as consumer wellness branding. Most recently I worked on a content-driven mobile app for marketing professionals — sharing articles, videos, and location-based recommendations through an interactive map, helping teams document experiences, showcase atmosphere and design details, and inspire others through real-world insights.</p>
           </div>
           <div class="tl-item">
-            <div class="yr" data-en="May 2022 — June 2024" data-es="Mayo 2022 — Junio 2024">May 2022 — June 2024</div>
-            <div class="role" data-en="UX/UI Designer" data-es="Diseñadora UX/UI">UX/UI Designer</div>
-            <div class="place">Galicia Bank</div>
+            <div class="tl-meta">
+              <div class="role" data-en="UX/UI Designer" data-es="Diseñadora UX/UI">UX/UI Designer</div>
+              <div class="place">Galicia Bank</div>
+              <div class="yr" data-en="May 2022 — June 2024" data-es="Mayo 2022 — Junio 2024">May 2022 — June 2024</div>
+            </div>
             <p class="tl-desc" data-en="UX/UI Designer within the Payments stream of a large-scale banking app, designing high-impact, transaction-critical experiences. I analyzed user behavior with tools like Hotjar, authored UX briefs, mapped user flows, and designed from wireframes to high-fidelity interactive prototypes. I led the UX design of a new banking product end-to-end — from research and proto-persona definition to information architecture, UI design, and usability testing — collaborating closely with product and engineering to ensure usability, consistency, and alignment with business and regulatory requirements." data-es="Diseñadora UX/UI dentro del stream de Pagos de una app bancaria a gran escala, diseñando experiencias de alto impacto y críticas para las transacciones. Analicé el comportamiento de los usuarios con herramientas como Hotjar, escribí briefs de UX, mapeé flujos y diseñé desde wireframes hasta prototipos interactivos de alta fidelidad. Lideré el diseño UX de un nuevo producto bancario de punta a punta —desde la investigación y la definición de proto-personas hasta la arquitectura de información, el diseño UI y el usability testing— colaborando de cerca con producto e ingeniería para asegurar usabilidad, consistencia y alineación con los requisitos de negocio y regulatorios.">UX/UI Designer within the Payments stream of a large-scale banking app, designing high-impact, transaction-critical experiences. I analyzed user behavior with tools like Hotjar, authored UX briefs, mapped user flows, and designed from wireframes to high-fidelity interactive prototypes. I led the UX design of a new banking product end-to-end — from research and proto-persona definition to information architecture, UI design, and usability testing — collaborating closely with product and engineering to ensure usability, consistency, and alignment with business and regulatory requirements.</p>
           </div>
           <div class="tl-item">
-            <div class="yr" data-en="February 2021 — January 2024" data-es="Febrero 2021 — Enero 2024">February 2021 — January 2024</div>
-            <div class="role" data-en="Senior Product Designer" data-es="Diseñadora Senior de Producto">Senior Product Designer</div>
-            <div class="place">Carestino</div>
+            <div class="tl-meta">
+              <div class="role" data-en="Senior Product Designer" data-es="Diseñadora Senior de Producto">Senior Product Designer</div>
+              <div class="place">Carestino</div>
+              <div class="yr" data-en="February 2021 — January 2024" data-es="Febrero 2021 — Enero 2024">February 2021 — January 2024</div>
+            </div>
             <p class="tl-desc" data-en="Responsible for adapting and redesigning products originally manufactured in China for multiple Latin American markets. I led product modifications to meet local regulatory requirements and cultural expectations across countries, ensuring compliance, usability, and market acceptance. My work spanned physical and digital touchpoints — redesigning product features, updating technical specifications, and adapting supporting assets like websites and user manuals. I collaborated with cross-functional teams so each market version reflected local language nuances, cultural context, and usage patterns, recognizing that even shared languages require distinct design considerations to earn adoption and trust." data-es="Responsable de adaptar y rediseñar productos fabricados originalmente en China para múltiples mercados de Latinoamérica. Lideré modificaciones de producto para cumplir requisitos regulatorios locales y expectativas culturales en distintos países, asegurando compliance, usabilidad y aceptación en el mercado. Mi trabajo abarcó touchpoints físicos y digitales — rediseñando características de producto, actualizando especificaciones técnicas y adaptando materiales de soporte como sitios web y manuales. Colaboré con equipos cross-funcionales para que cada versión reflejara los matices del idioma local, el contexto cultural y los patrones de uso, entendiendo que incluso idiomas compartidos requieren consideraciones de diseño distintas para ganar adopción y confianza.">Responsible for adapting and redesigning products originally manufactured in China for multiple Latin American markets. I led product modifications to meet local regulatory requirements and cultural expectations across countries, ensuring compliance, usability, and market acceptance. My work spanned physical and digital touchpoints — redesigning product features, updating technical specifications, and adapting supporting assets like websites and user manuals. I collaborated with cross-functional teams so each market version reflected local language nuances, cultural context, and usage patterns, recognizing that even shared languages require distinct design considerations to earn adoption and trust.</p>
           </div>
         </div>
@@ -118,36 +137,51 @@
         </div>
       </section>
 
-      <!-- CONTACT (dark, simple, logo as centrepiece) -->
-      <section class="contact" id="contact">
-        <a class="logo big" data-nav="home" aria-label="FRNKL">
-          <span class="fx">F</span><span class="fx">R</span><span class="fx">N</span><span>K</span><span class="fy">L</span>
-        </a>
-        <h2 data-en="Get in touch" data-es="Contactame">Get in touch</h2>
-        <p data-en="Let's design thoughtful experiences together." data-es="Diseñemos experiencias con intención, juntas.">Let's design thoughtful experiences together.</p>
-        <a class="mail-link" href="mailto:niki.frenkel@gmail.com">niki.frenkel@gmail.com</a>
+      <!-- ===================== SELECTED PROJECTS ===================== -->
+      <section class="projects-section" id="projects">
+        <div class="marquee-label" data-en="Selected projects" data-es="Proyectos seleccionados">Selected projects</div>
+        <div class="carousel">
+          <button class="cf-arrow prev" id="prev" aria-label="Previous project">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <div class="stage" id="stage" aria-roledescription="carousel"></div>
+          <button class="cf-arrow next" id="next" aria-label="Next project">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <h2 class="cf-title" data-en="Eight years designing products,<br>and five crafting intuitive, human-centered interfaces." data-es="Ocho años diseñando productos,<br>y cinco creando interfaces intuitivas y centradas en las personas.">Eight years designing products,<br>and five crafting intuitive, human-centered interfaces.</h2>
+        <div class="controls">
+          <div class="dots" id="dots"></div>
+        </div>
       </section>
 
-      <footer>
-        <span>© 2026 Nicole Frenkel</span>
-        <div class="flinks">
-          <a href="mailto:niki.frenkel@gmail.com">niki.frenkel@gmail.com</a>
+      <!-- ===================== CONTACT ===================== -->
+      <section class="contact" id="contact">
+        <a class="logo big" href="#home" data-nav="home" aria-label="FRNKL">
+          <span class="fx c1">F</span><span class="fx c2">R</span><span class="fx c3">N</span><span class="c4">K</span><span class="fy c5">L</span>
+        </a>
+        <div class="contact-eyebrow" data-en="Get in touch" data-es="Contactame">Get in touch</div>
+        <h2 data-en="Let's design thoughtful<br>experiences together." data-es="Diseñemos experiencias<br>con intención, juntas.">Let's design thoughtful<br>experiences together.</h2>
+
+        <a class="contact-mail" href="mailto:niki.frenkel@gmail.com" aria-label="Email">
+          <svg class="ci" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg>
+          niki.frenkel@gmail.com
+        </a>
+
+        <div class="contact-meta">
+          <span class="cmeta">
+            <svg class="ci" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span data-en="Based in Buenos Aires" data-es="En Buenos Aires">Based in Buenos Aires</span>
+          </span>
+          <span class="cdot" aria-hidden="true">·</span>
           <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+          <span class="cdot" aria-hidden="true">·</span>
           <a href="https://www.behance.net/nicolefrenkel" target="_blank" rel="noopener">Behance</a>
         </div>
-      </footer>
-    </main>
+      </section>
 
-    <!-- ===================== PROJECTS VIEW ===================== -->
-    <main id="view-projects" hidden>
-      <div class="stage" id="stage" aria-roledescription="carousel"></div>
-      <h2 class="cf-title" data-en="Eight years designing meaningful products, and five intuitive interfaces." data-es="Ocho años diseñando productos con sentido, y cinco interfaces intuitivas.">Eight years designing meaningful products, and five intuitive interfaces.</h2>
-      <div class="controls">
-        <div class="dots" id="dots"></div>
-      </div>
-      <div style="text-align:center">
-        <a class="backlink" data-nav="home" data-en="← Back home" data-es="← Volver al inicio">← Back home</a>
-      </div>
+      </div><!-- /.overlap-inner -->
+      </div><!-- /.overlap -->
     </main>
   </div>
 
