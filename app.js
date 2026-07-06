@@ -45,10 +45,9 @@ function render(){
   });
   dots.forEach((d,i)=>d.classList.toggle('active',i===current));
 }
-/* Cadencia igualada al marquee de "teams" de la home: ese marquee recorre
-   7 nombres en 26s (~3.7s por ítem), así que el carrusel avanza una card
-   cada ~3.7s para que se sienta a la misma velocidad. */
-function play(){ stop(); if(!sheetOpen && projectsInView) timer=setInterval(()=>{ current=(current+1)%n; render(); },3700); }
+/* Autoavanza al entrar en la sección: cada card queda centrada ~1s
+   antes de pasar a la siguiente. */
+function play(){ stop(); if(!sheetOpen && projectsInView) timer=setInterval(()=>{ current=(current+1)%n; render(); },1000); }
 function stop(){ if(timer){ clearInterval(timer); timer=null; } }
 stage.addEventListener('mouseenter',stop);
 stage.addEventListener('mouseleave',()=>{ if(!sheetOpen) play(); });
