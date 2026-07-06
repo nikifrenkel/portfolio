@@ -127,6 +127,14 @@ const spy=new IntersectionObserver(entries=>{
 },{rootMargin:'-45% 0px -50% 0px', threshold:0});
 sections.forEach(s=>spy.observe(s));
 
+/* ---------- Fondo del nav: sólo aparece al scrollear por debajo de Home ---------- */
+const navEl=document.getElementById('top'), journeySection=document.getElementById('journey');
+if(navEl && journeySection){
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ navEl.classList.toggle('solid', e.isIntersecting); });
+  },{rootMargin:'0px 0px -100% 0px', threshold:0}).observe(journeySection);
+}
+
 /* ---------- Idioma ---------- */
 document.querySelectorAll('.lang button').forEach(btn=>{
   btn.addEventListener('click',()=>{
