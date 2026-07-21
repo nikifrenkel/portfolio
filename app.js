@@ -21,9 +21,27 @@ let lang='en', current=0, sheetOpen=false, timer=null, dragged=false, startX=nul
 const stage=document.getElementById('stage'), dotsWrap=document.getElementById('dots');
 projects.forEach((p,i)=>{
   const c=document.createElement('div'); c.className='cf-card';
-  c.innerHTML=`<div class="cover"><span data-en="cover →" data-es="portada →">cover →</span></div>
-    <div class="cbody"><div class="ctitle">${p.title}</div><div class="crole" data-en="${p.role_en}" data-es="${p.role_es}">${p.role_en}</div></div>`;
-  c.addEventListener('click',()=>{ if(!dragged) openSheet(i); });
+  const eyebrow_en=p.eyebrow_en||p.role_en, eyebrow_es=p.eyebrow_es||p.role_es;
+  const cta_en=p.cta_en||'View project', cta_es=p.cta_es||'Ver proyecto';
+  const chips=(p.chips_en||[]).map((chip,ci)=>`<span data-en="${chip}" data-es="${p.chips_es[ci]}">${chip}</span>`).join('');
+  c.innerHTML=`<div class="cf-cover"${p.cover?` style="background-image:url('${p.cover}');background-position:${p.coverPos||'top center'};"`:''}></div>
+    <div class="cf-scrim"></div>
+    <div class="cf-content">
+      <div class="cf-eyebrow" data-en="${eyebrow_en}" data-es="${eyebrow_es}">${eyebrow_en}</div>
+      <div class="cf-name">${p.title}</div>
+      ${p.blurb_en?`<div class="cf-blurb" data-en="${p.blurb_en}" data-es="${p.blurb_es}">${p.blurb_en}</div>`:''}
+      ${chips?`<div class="cf-chips">${chips}</div>`:''}
+      <button type="button" class="cf-cta" data-en="${cta_en}" data-es="${cta_es}">${cta_en}</button>
+    </div>`;
+  c.addEventListener('click',e=>{
+    if(dragged) return;
+    /* El botón "View project" siempre abre el bottom sheet. */
+    if(e.target.closest('.cf-cta')){ openSheet(i); return; }
+    /* Si la card no es la central, el click sólo la trae al centro. */
+    if(i!==current){ current=i; render(); play(); return; }
+    /* Ya es la central: recién ahí el click abre el bottom sheet. */
+    openSheet(i);
+  });
   stage.appendChild(c);
   const d=document.createElement('button'); d.className='dot'; d.setAttribute('aria-label','go to '+p.title);
   d.addEventListener('click',()=>{ current=i; render(); play(); });
@@ -80,25 +98,160 @@ window.addEventListener('pointerup',e=>{
   startX=null; setTimeout(()=>{ dragged=false; },0);
 });
 
-/* ---------- Bottom sheet (detalle de proyecto) ---------- */
+/* ---------- Bottom sheet (case study de un proyecto) ----------
+   El .sheet mide SIEMPRE 100vh — nunca se resizea mientras se scrollea
+   adentro (eso rompía el scroll: cambiar `height` en cada evento hacía
+   que el navegador recalculara el contenedor scrolleable a mitad de
+   gesto y "saltara"). En cambio el efecto peek→fullscreen se logra
+   corriendo el .sheet entero con translateY (setSheetY), que no toca el
+   layout interno para nada — el scroll de adentro queda intacto.
+   A los 80px de scroll queda completamente expandido: pierde el
+   border-radius, tapa toda la pantalla, y el ícono de la esquina pasa de
+   "cerrar" (X) a "colapsar" (flecha abajo). Tocar ese ícono estando
+   expandido colapsa el sheet de nuevo a su tamaño de "peek"; tocarlo ya
+   colapsado lo cierra del todo. */
+const EXPAND_DIST=80; // px de scroll para llegar a fullscreen
+const PEEK_VH=10; // hueco arriba (vh) que deja ver el fondo, en estado "peek"
 const sheet=document.getElementById('sheet'), backdrop=document.getElementById('backdrop');
-function openSheet(i){
-  current=i; render();
-  const p=projects[i];
+const sheetScroll=document.getElementById('sheetScroll'), closeBtn=document.getElementById('closeSheet');
+const scrollHint=document.getElementById('scrollHint');
+const csGeneric=document.getElementById('csGeneric');
+const csCustomBlocks=[...document.querySelectorAll('.cs-custom')];
+let ignoreScroll=false; // true mientras reseteamos scrollTop a mano, para no pisar la animación
+
+/* Proyectos con case study propio (content.js: campo caseStudyEl) muestran
+   su bloque a medida en vez de la plantilla genérica de placeholders. */
+function renderSheetText(){
+  const p=projects[current];
+  csCustomBlocks.forEach(el=>{ el.hidden=(el.id!==p.caseStudyEl); });
+  csGeneric.hidden=!!p.caseStudyEl;
+  if(p.caseStudyEl) return;
   document.getElementById('sheetRole').textContent=lang==='es'?p.role_es:p.role_en;
   document.getElementById('sheetTitle').textContent=p.title;
-  document.getElementById('sheetDesc').textContent=lang==='es'?p.desc_es:p.desc_en;
-  const ph=document.getElementById('sheetPhotos'); ph.innerHTML='';
-  for(let k=0;k<4;k++){ const d=document.createElement('div'); d.className='photo'; d.textContent=lang==='es'?'foto':'photo'; ph.appendChild(d); }
+  document.getElementById('sheetStatement').textContent=lang==='es'?p.desc_es:p.desc_en;
+}
+function updateCloseLabel(){
+  const expanded=sheet.classList.contains('expanded');
+  const labels={ close_en:'close', close_es:'cerrar', collapse_en:'collapse', collapse_es:'colapsar' };
+  closeBtn.setAttribute('aria-label', labels[(expanded?'collapse_':'close_')+lang]);
+}
+/* animate=true: transición suave (abrir/cerrar/colapsar, gestos discretos,
+   clase .animating prende la transición del transform — ver CSS).
+   animate=false: sin transición, para que el translateY siga el scroll
+   1:1 sin lag. El border-radius nunca se toca acá: lo maneja solo el CSS
+   vía la clase .expanded, independiente de esto. */
+function setSheetY(vh,animate){
+  sheet.classList.toggle('animating',animate);
+  sheet.style.transform=`translateY(${vh}vh)`;
+}
+function resetSheetShape(){
+  scrollHint.style.opacity='1';
+  sheet.classList.remove('expanded');
+}
+function resetScrollPosition(){
+  ignoreScroll=true;
+  sheetScroll.scrollTop=0;
+  requestAnimationFrame(()=>{ ignoreScroll=false; });
+}
+/* El scroll actualiza la posición del sheet a lo sumo una vez por frame
+   (requestAnimationFrame), no en cada evento crudo de scroll. El "blur del
+   fondo" ya no depende de esto: es estático vía `body.sheet-open .wrap`
+   (ver CSS), así que scrollear no recalcula ningún blur. */
+let scrollTicking=false;
+function onSheetScroll(){
+  if(ignoreScroll) return;
+  if(scrollTicking) return;
+  scrollTicking=true;
+  requestAnimationFrame(applyScrollProgress);
+}
+function applyScrollProgress(){
+  scrollTicking=false;
+  const p=Math.max(0, Math.min(1, sheetScroll.scrollTop/EXPAND_DIST));
+  setSheetY(PEEK_VH*(1-p), false);
+  scrollHint.style.opacity=String(1-p);
+  const expanded=p>=1;
+  if(expanded!==sheet.classList.contains('expanded')){
+    sheet.classList.toggle('expanded',expanded);
+    updateCloseLabel();
+  }
+}
+function openSheet(i){
+  current=i; render();
+  renderSheetText();
   sheetOpen=true; stop();
-  sheet.classList.add('open'); backdrop.classList.add('open'); document.body.style.overflow='hidden';
+  resetSheetShape();
+  resetScrollPosition();
+  /* Blureamos el fondo ANTES de deslizar el sheet, así el blur ya está
+     aplicado y estático cuando arranca la animación (no compiten). */
+  document.body.classList.add('sheet-open'); document.body.style.overflow='hidden';
+  setSheetY(PEEK_VH,true);
+  backdrop.classList.add('open');
+  updateCloseLabel();
 }
 function closeSheet(){
   if(!sheetOpen) return;
-  sheetOpen=false; sheet.classList.remove('open'); backdrop.classList.remove('open'); document.body.style.overflow=''; play();
+  sheetOpen=false;
+  setSheetY(101,true);
+  resetSheetShape();
+  backdrop.classList.remove('open'); document.body.classList.remove('sheet-open'); document.body.style.overflow=''; play();
 }
-document.getElementById('closeSheet').addEventListener('click',closeSheet);
+closeBtn.addEventListener('click',()=>{
+  if(sheet.classList.contains('expanded')){
+    resetScrollPosition();
+    setSheetY(PEEK_VH,true);
+    resetSheetShape();
+    updateCloseLabel();
+  } else {
+    closeSheet();
+  }
+});
 backdrop.addEventListener('click',closeSheet);
+sheetScroll.addEventListener('scroll',onSheetScroll);
+
+/* Pie del case study: cerrar / volver arriba / siguiente proyecto. */
+document.getElementById('footerCloseBtn').addEventListener('click',closeSheet);
+document.getElementById('footerTopBtn').addEventListener('click',()=>{
+  sheetScroll.scrollTo({ top:0, behavior:'smooth' });
+});
+document.getElementById('footerNextBtn').addEventListener('click',()=>{
+  openSheet((current+1)%projects.length);
+});
+
+/* ---------- Recommendations (testimonios) ----------
+   Construye las tarjetas desde `recommendations` (content.js).
+   Cada quote se recorta a 4 líneas por CSS; el botón "Read more"
+   sólo aparece cuando el texto realmente se pasa de largo. */
+const recosGrid=document.getElementById('recosGrid');
+let refreshRecoButtons=()=>{};
+if(recosGrid && typeof recommendations!=='undefined'){
+  recommendations.forEach(r=>{
+    const fig=document.createElement('figure'); fig.className='reco-card';
+    fig.innerHTML=`<span class="reco-quote-mark" aria-hidden="true">“</span>
+      <blockquote class="reco-quote" data-en="${r.quote_en}" data-es="${r.quote_es}">${r.quote_en}</blockquote>
+      <button class="reco-more" type="button"></button>
+      <figcaption class="reco-cite">
+        <span class="reco-name">${r.name}</span>
+        <span class="reco-role" data-en="${r.role_en}" data-es="${r.role_es}">${r.role_en}</span>
+      </figcaption>`;
+    recosGrid.appendChild(fig);
+  });
+  const recoCards=[...recosGrid.querySelectorAll('.reco-card')];
+  const recoTxt={ more_en:'Read more', more_es:'Leer más', less_en:'Read less', less_es:'Leer menos' };
+  refreshRecoButtons=function(){
+    recoCards.forEach(card=>{
+      const q=card.querySelector('.reco-quote'), btn=card.querySelector('.reco-more');
+      const expanded=card.classList.contains('expanded');
+      const overflowing=expanded || q.scrollHeight > q.clientHeight+2;
+      btn.style.display=overflowing?'':'none';
+      btn.textContent=expanded?recoTxt['less_'+lang]:recoTxt['more_'+lang];
+    });
+  };
+  recoCards.forEach(card=>{
+    card.querySelector('.reco-more').addEventListener('click',()=>{ card.classList.toggle('expanded'); refreshRecoButtons(); });
+  });
+  window.addEventListener('resize',refreshRecoButtons);
+  refreshRecoButtons();
+}
 
 /* ---------- Navegación en la misma página + menú mobile ---------- */
 const navLinks=document.getElementById('navLinks');
@@ -117,7 +270,7 @@ document.addEventListener('click',e=>{
 });
 
 /* ---------- Scrollspy: marca la sección activa en el topbar ---------- */
-const sections=['home','journey','projects','contact'].map(id=>document.getElementById(id)).filter(Boolean);
+const sections=['home','journey','projects','recos','contact'].map(id=>document.getElementById(id)).filter(Boolean);
 const spy=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(!e.isIntersecting) return;
@@ -142,7 +295,8 @@ document.querySelectorAll('.lang button').forEach(btn=>{
     document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('active',b===btn));
     document.documentElement.lang=lang;
     document.querySelectorAll('[data-en]').forEach(el=>{ el.innerHTML=el.dataset[lang]; });
-    if(sheetOpen) openSheet(current);
+    refreshRecoButtons();
+    if(sheetOpen){ renderSheetText(); updateCloseLabel(); }
   });
 });
 
