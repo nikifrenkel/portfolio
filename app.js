@@ -185,25 +185,28 @@ if(deckEl){
 }
 
 /* ---------- Bottom sheet (case study de un proyecto) ----------
-   El .sheet mide SIEMPRE 100vh — nunca se resizea mientras se scrollea
-   adentro (eso rompía el scroll: cambiar `height` en cada evento hacía
-   que el navegador recalculara el contenedor scrolleable a mitad de
-   gesto y "saltara"). En cambio el efecto peek→fullscreen se logra
-   corriendo el .sheet entero con translateY (setSheetY), que no toca el
-   layout interno para nada — el scroll de adentro queda intacto.
-   A los 80px de scroll queda completamente expandido: pierde el
-   border-radius, tapa toda la pantalla, y el ícono de la esquina pasa de
-   "cerrar" (X) a "colapsar" (flecha abajo). Tocar ese ícono estando
-   expandido colapsa el sheet de nuevo a su tamaño de "peek"; tocarlo ya
-   colapsado lo cierra del todo. */
-const EXPAND_DIST=80; // px de scroll para llegar a fullscreen
-const PEEK_VH=10; // hueco arriba (vh) que deja ver el fondo, en estado "peek"
+   Estado contraído (default): el .sheet es un card anclado al fondo de la
+   ventana, centrado, con un ancho máximo (~1000px) y un hueco arriba
+   (~6vh) que deja ver el fondo blureado. Tiene border-radius sólo en las
+   esquinas de arriba, un borde fino y una sombra suave hacia arriba.
+   Estado expandido (clase .full): pantalla completa — sin border-radius,
+   100% de ancho, sin hueco arriba. La transición (ancho / top /
+   border-radius) es puro CSS, ~0.3s.
+   El scroll interno del sheet dispara el cambio con HISTÉRESIS: expande al
+   pasar los 60px y recién contrae al bajar de los 40px, para que no titile
+   cuando el usuario queda justo en el límite. Toggleamos una sola clase
+   (.full), nunca estilos inline, y NO animamos transform/scale del layout:
+   el ancho se anima con el sheet aislado (`contain:layout paint` +
+   will-change, ver CSS) para que no haya reflow del fondo ni flash al
+   invertir el scroll. El botón de la esquina siempre cierra el sheet. */
+const EXPAND_AT=60;   // px de scroll para expandir a fullscreen
+const CONTRACT_AT=40; // px por debajo de los cuales vuelve a contraerse (histéresis)
 const sheet=document.getElementById('sheet'), backdrop=document.getElementById('backdrop');
 const sheetScroll=document.getElementById('sheetScroll'), closeBtn=document.getElementById('closeSheet');
 const scrollHint=document.getElementById('scrollHint');
 const csGeneric=document.getElementById('csGeneric');
 const csCustomBlocks=[...document.querySelectorAll('.cs-custom')];
-let ignoreScroll=false; // true mientras reseteamos scrollTop a mano, para no pisar la animación
+let ignoreScroll=false; // true mientras reseteamos scrollTop a mano, para no disparar el toggle
 
 /* Proyectos con case study propio (content.js: campo caseStudyEl) muestran
    su bloque a medida en vez de la plantilla genérica de placeholders. */
@@ -219,30 +222,19 @@ function renderSheetText(){
 function updateCloseLabel(){
   closeBtn.setAttribute('aria-label', lang==='es'?'cerrar':'close');
 }
-/* animate=true: transición suave (abrir/cerrar/colapsar, gestos discretos,
-   clase .animating prende la transición del transform — ver CSS).
-   animate=false: sin transición, para que el translateY siga el scroll
-   1:1 sin lag. El border-radius nunca se toca acá: lo maneja solo el CSS
-   vía la clase .expanded, independiente de esto. */
-function setSheetY(vh,animate){
-  sheet.classList.toggle('animating',animate);
-  /* translate3d (no translateY) para mantener el sheet en su capa de GPU
-     propia y que el compositor no lo suelte un frame — ver CSS .sheet. */
-  sheet.style.transform=`translate3d(0,${vh}vh,0)`;
-}
 function resetSheetShape(){
   scrollHint.style.opacity='1';
-  sheet.classList.remove('expanded');
+  sheet.classList.remove('full');
 }
 function resetScrollPosition(){
   ignoreScroll=true;
   sheetScroll.scrollTop=0;
   requestAnimationFrame(()=>{ ignoreScroll=false; });
 }
-/* El scroll actualiza la posición del sheet a lo sumo una vez por frame
-   (requestAnimationFrame), no en cada evento crudo de scroll. El "blur del
-   fondo" ya no depende de esto: es estático vía `body.sheet-open .wrap`
-   (ver CSS), así que scrollear no recalcula ningún blur. */
+/* El scroll interno decide, a lo sumo una vez por frame, si el sheet está
+   contraído o expandido. La histéresis (EXPAND_AT / CONTRACT_AT) evita que
+   titile en el umbral. El "blur del fondo" es estático vía
+   `body.sheet-open .wrap` (ver CSS): scrollear no recalcula ningún blur. */
 let scrollTicking=false;
 function onSheetScroll(){
   if(ignoreScroll) return;
@@ -252,14 +244,13 @@ function onSheetScroll(){
 }
 function applyScrollProgress(){
   scrollTicking=false;
-  const p=Math.max(0, Math.min(1, sheetScroll.scrollTop/EXPAND_DIST));
-  setSheetY(PEEK_VH*(1-p), false);
-  scrollHint.style.opacity=String(1-p);
-  const expanded=p>=1;
-  if(expanded!==sheet.classList.contains('expanded')){
-    sheet.classList.toggle('expanded',expanded);
-    updateCloseLabel();
-  }
+  const y=sheetScroll.scrollTop;
+  const isFull=sheet.classList.contains('full');
+  if(!isFull && y>EXPAND_AT){ sheet.classList.add('full'); }
+  else if(isFull && y<CONTRACT_AT){ sheet.classList.remove('full'); }
+  /* El hint "scroll to explore" se apaga a medida que se entra en zona de
+     expansión y ya está apagado cuando el sheet queda fullscreen. */
+  scrollHint.style.opacity=String(Math.max(0, 1 - y/EXPAND_AT));
 }
 function openSheet(i){
   current=i; render();
@@ -270,19 +261,17 @@ function openSheet(i){
   /* Blureamos el fondo ANTES de deslizar el sheet, así el blur ya está
      aplicado y estático cuando arranca la animación (no compiten). */
   document.body.classList.add('sheet-open'); document.body.style.overflow='hidden';
-  setSheetY(PEEK_VH,true);
+  sheet.classList.add('open'); // sube desde abajo (transform, ver CSS)
   backdrop.classList.add('open');
   updateCloseLabel();
 }
 function closeSheet(){
   if(!sheetOpen) return;
   sheetOpen=false;
-  setSheetY(101,true);
+  sheet.classList.remove('open'); // baja hasta salir de la pantalla
   resetSheetShape();
   backdrop.classList.remove('open'); document.body.classList.remove('sheet-open'); document.body.style.overflow=''; play();
 }
-/* El botón de la esquina SIEMPRE cierra el sheet (esté en peek o
-   expandido). */
 closeBtn.addEventListener('click',closeSheet);
 backdrop.addEventListener('click',closeSheet);
 sheetScroll.addEventListener('scroll',onSheetScroll);

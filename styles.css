@@ -326,13 +326,10 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
    Paleta propia (cs-*) para que el case study tenga su propio look
    editorial y calmo sin tocar los colores del resto del sitio.
 
-   La altura del .sheet queda SIEMPRE fija en 100vh — nunca se resizea
-   mientras se scrollea adentro (eso era lo que rompía el scroll: cambiar
-   `height` en cada evento de scroll hace que el navegador recalcule el
-   contenedor scrolleable a mitad de gesto y "salte"). En cambio, el
-   efecto peek→fullscreen se logra corriendo el .sheet con translateY
-   (ver app.js: setSheetY / onSheetScroll), que no afecta el layout
-   interno para nada. */
+   El .sheet arranca como un card contraído anclado al fondo (ancho máximo,
+   hueco arriba) y se expande a fullscreen con la clase .full (ver más
+   abajo y app.js: onSheetScroll). El resize a fullscreen queda aislado con
+   `contain:layout paint` para no refluir el fondo. */
 /* NADA de backdrop-filter acá. Un backdrop-filter:blur ocupa toda la
    pantalla ENTRE el sheet (que se mueve) y la página, así que el navegador
    tiene que re-rasterizar ese blur en cada frame que el sheet composita
@@ -352,34 +349,46 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
    sheet empiece a deslizarse, para no competir con esa animación. */
 body.sheet-open .wrap{ filter:blur(16px); }
 
+/* ESTADO CONTRAÍDO (default): card anclado al fondo, centrado, ancho máximo
+   ~1000px, con ~6vh de hueco arriba que deja ver el fondo blureado.
+   La altura sale de top+bottom (no hay `height` fijo), así el sheet-scroll
+   de adentro siempre tiene una altura definida para scrollear.
+   El slide de abrir/cerrar se hace con transform (translateY 100% ↔ 0),
+   que no toca el layout. El cambio a fullscreen (clase .full) anima
+   width/top/border-radius; para que ese resize sea LIVIANO y no glitchee,
+   la columna de contenido queda FIJA (--maxw acá abajo): el texto y las
+   imágenes NO se re-wrapean ni reescalan al expandir — sólo crece el fondo
+   crema y sus márgenes (puro paint). Sin esto, animar el ancho reflowea
+   todo el case study en cada frame y se siente pesado. El `contain` aísla
+   además el resto de la página. */
 .sheet{
   --cs-brick:#B04A38; --cs-coral:#F0997B; --cs-cream:#fdfbf8; --cs-ink:#211b17; --cs-ink-soft:#5c5048;
   --cs-surface:#EFE7DD; --cs-border:#E1D5C6; --cs-muted:#9C9086;
-  position:fixed; left:0; right:0; top:0; z-index:70;
-  height:100vh;
+  /* Columna de contenido fija (más angosta que el sheet en fullscreen), para
+     que expandir/contraer NO refluya el contenido. Subir/bajar este número
+     cambia cuán ancho lee el case study; el fondo crema lo rodea. */
+  --maxw:900px;
+  position:fixed; left:0; right:0; top:6vh; bottom:0; z-index:70;
+  width:min(1000px,100%); max-width:1000px; margin-inline:auto;
   background:var(--cs-cream); color:var(--cs-ink);
-  border-radius:28px 28px 0 0;
+  border-radius:22px 22px 0 0;
+  border-top:1px solid var(--cs-border);
   box-shadow:0 -24px 70px -24px rgba(90,60,30,.55);
-  transform:translate3d(0,101vh,0);
+  transform:translateY(100%); /* arranca fuera de la pantalla, abajo */
   overflow:hidden;
-  transition:border-radius .3s ease; /* siempre activa, independiente del transform */
-  /* El sheet vive SIEMPRE en su propia capa de GPU estable. Sin esto el
-     compositor lo puede "soltar" un frame durante la animación de transform
-     y se ve el fondo a través (el famoso parpadeo). translate3d/backface/
-     will-change lo fuerzan a una capa propia que no se descarta. */
-  will-change:transform;
+  contain:layout paint;
+  will-change:transform; /* sólo transform se compone en GPU; width/top no */
   backface-visibility:hidden; -webkit-backface-visibility:hidden;
-  -webkit-transform:translate3d(0,101vh,0);
+  transition:transform .42s cubic-bezier(.22,.61,.36,1),
+             width .3s ease, top .3s ease, border-radius .3s ease;
 }
-/* El border-radius NO se anima en cada evento de scroll (eso, combinado
-   con el blur del backdrop detrás, es lo que causaba el flash a negro en
-   algunos GPUs) — sólo cambia, con la transición de arriba, al cruzar el
-   umbral de fullscreen (clase .expanded). El translateY sí sigue el
-   scroll 1:1 en cada evento; su transición se prende/apaga aparte con la
-   clase .animating (ver app.js: setSheetY), para no interferir con la de
-   border-radius. */
-.sheet.expanded{ border-radius:0; }
-.sheet.animating{ transition:border-radius .3s ease, transform .42s cubic-bezier(.22,.61,.36,1); }
+.sheet.open{ transform:translateY(0); } /* deslizado hasta su lugar de reposo */
+/* ESTADO EXPANDIDO: pantalla completa. Pierde el hueco de arriba, el ancho
+   máximo y el border-radius; el borde superior se desvanece. */
+.sheet.full{
+  top:0; width:100%; max-width:none;
+  border-radius:0; border-top-color:transparent;
+}
 
 .sheet-scroll{ height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; overflow-anchor:none; }
 .sheet-inner{ position:relative; }
