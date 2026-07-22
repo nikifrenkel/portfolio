@@ -63,12 +63,18 @@ function render(){
   });
   dots.forEach((d,i)=>d.classList.toggle('active',i===current));
 }
-/* Autoavanza al entrar en la sección: cada card queda centrada ~1s
-   antes de pasar a la siguiente. */
-function play(){ stop(); if(!sheetOpen && projectsInView) timer=setInterval(()=>{ current=(current+1)%n; render(); },1000); }
+/* Autoavanza al entrar en la sección: cada card queda centrada ~1s antes
+   de pasar a la siguiente. NO autoavanza mientras el mouse está encima
+   del carrusel (hovering) — así podés leer una card sin que se te escape. */
+let hovering=false;
+function play(){ stop(); if(!sheetOpen && projectsInView && !hovering) timer=setInterval(()=>{ current=(current+1)%n; render(); },1000); }
 function stop(){ if(timer){ clearInterval(timer); timer=null; } }
-stage.addEventListener('mouseenter',stop);
-stage.addEventListener('mouseleave',()=>{ if(!sheetOpen) play(); });
+/* Escuchamos en toda la zona del carrusel (flechas incluidas), no sólo en
+   el stage, porque las cards se salen de la caja del stage y las mouseenter/
+   leave sobre el stage solo se disparaban de forma inconsistente. */
+const carouselEl=document.querySelector('.carousel')||stage;
+carouselEl.addEventListener('pointerenter',()=>{ hovering=true; stop(); });
+carouselEl.addEventListener('pointerleave',()=>{ hovering=false; if(!sheetOpen) play(); });
 
 /* El carrusel sólo autoavanza (y responde a las flechas) cuando
    la sección de proyectos está a la vista. */
@@ -97,6 +103,78 @@ window.addEventListener('pointerup',e=>{
   else if(dx<-60){ current=(current+1)%n; render(); play(); }
   startX=null; setTimeout(()=>{ dragged=false; },0);
 });
+
+/* ---------- Hero deck: baraja de cards en abanico (solo desktop) ----------
+   Replica el "stack" pedido: 4 cards de tamaño fijo apiladas en el mismo
+   centro. Una está al frente (active); las demás asoman corridas a la
+   derecha+abajo, escaladas y rotadas como una baraja en abanico. Todo se
+   deriva de `deckActive` (0–3): al cambiarlo, sólo cambian los números y
+   las transiciones CSS animan el reacomodo. Reusa las mismas cards del
+   carrusel (los primeros 4 proyectos de content.js). */
+const deckEl=document.getElementById('deck');
+if(deckEl){
+  const deckInner=deckEl.querySelector('.deck-inner');
+  const deckStack=deckEl.querySelector('.deck-stack');
+  const deckDotsWrap=deckEl.querySelector('.deck-dots');
+  const DN=4;                                   // cantidad de cards del deck
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const deckData=projects.slice(0,DN);
+  let deckActive=0, deckHover=false, deckTimer=null, deckTilt={x:0,y:0};
+
+  /* Arma las 4 cards (mismo markup que el carrusel: portada + scrim +
+     eyebrow + título) y un dot por card. */
+  const deckCards=deckData.map((p,i)=>{
+    const eyebrow_en=p.eyebrow_en||p.role_en, eyebrow_es=p.eyebrow_es||p.role_es;
+    const card=document.createElement('div'); card.className='cf-card deck-card';
+    card.innerHTML=`<div class="cf-cover"${p.cover?` style="background-image:url('${p.cover}');background-position:${p.coverPos||'top center'};"`:''}></div>
+      <div class="cf-scrim"></div>
+      <div class="cf-content">
+        <div class="cf-eyebrow" data-en="${eyebrow_en}" data-es="${eyebrow_es}">${eyebrow_en}</div>
+        <div class="cf-name">${p.title}</div>
+      </div>`;
+    deckInner.appendChild(card);
+    const dot=document.createElement('button'); dot.className='dot'; dot.type='button'; dot.tabIndex=-1;
+    dot.addEventListener('click',e=>{ e.stopPropagation(); deckActive=i; renderDeck(); playDeck(); });
+    deckDotsWrap.appendChild(dot);
+    return card;
+  });
+  const deckDots=[...deckDotsWrap.children];
+
+  /* Profundidad d desde el frente → transform. Front card (d=0) centrada;
+     cada paso hacia atrás: +42px derecha, +8px abajo, −6% escala, +5° giro. */
+  function renderDeck(){
+    deckCards.forEach((card,i)=>{
+      const d=(i-deckActive+DN)%DN;
+      card.style.transform=`translate(-50%,-50%) translateX(${d*42}px) translateY(${d*8}px) rotate(${d*5}deg) scale(${1-d*0.06})`;
+      card.style.zIndex=String(DN-d);
+      card.style.opacity=d>=3?'0':String(1-d*0.16);   // la 4ta (atrás del todo) se esconde
+      card.style.pointerEvents=d>=3?'none':'auto';
+    });
+    deckDots.forEach((dot,i)=>dot.classList.toggle('active',i===deckActive));
+  }
+  /* Autoavanza cada ~3.2s; se pausa con el mouse encima (deckHover). Con
+     "reduce motion" no autoavanza (queda estática). */
+  function playDeck(){ stopDeck(); if(reduceMotion) return;
+    deckTimer=setInterval(()=>{ if(!deckHover){ deckActive=(deckActive+1)%DN; renderDeck(); } },3200); }
+  function stopDeck(){ if(deckTimer){ clearInterval(deckTimer); deckTimer=null; } }
+
+  /* Tilt de parallax con el cursor: va sobre el wrapper (.deck-inner), no
+     sobre las cards, para no pelear con la matemática del abanico. */
+  function applyTilt(){ deckInner.style.transform=`rotateX(${-deckTilt.y*6}deg) rotateY(${deckTilt.x*9}deg)`; }
+  deckStack.addEventListener('mousemove',e=>{
+    if(reduceMotion) return;
+    const r=deckStack.getBoundingClientRect();
+    deckTilt={ x:(e.clientX-r.left)/r.width-0.5, y:(e.clientY-r.top)/r.height-0.5 };
+    applyTilt();
+  });
+  deckStack.addEventListener('mouseenter',()=>{ deckHover=true; });
+  deckStack.addEventListener('mouseleave',()=>{ deckHover=false; deckTilt={x:0,y:0}; applyTilt(); });
+  /* Click en la baraja: baraja +1 al instante (mismo salto que el auto). */
+  deckStack.addEventListener('click',()=>{ deckActive=(deckActive+1)%DN; renderDeck(); playDeck(); });
+
+  renderDeck();
+  playDeck();
+}
 
 /* ---------- Bottom sheet (case study de un proyecto) ----------
    El .sheet mide SIEMPRE 100vh — nunca se resizea mientras se scrollea
@@ -131,9 +209,7 @@ function renderSheetText(){
   document.getElementById('sheetStatement').textContent=lang==='es'?p.desc_es:p.desc_en;
 }
 function updateCloseLabel(){
-  const expanded=sheet.classList.contains('expanded');
-  const labels={ close_en:'close', close_es:'cerrar', collapse_en:'collapse', collapse_es:'colapsar' };
-  closeBtn.setAttribute('aria-label', labels[(expanded?'collapse_':'close_')+lang]);
+  closeBtn.setAttribute('aria-label', lang==='es'?'cerrar':'close');
 }
 /* animate=true: transición suave (abrir/cerrar/colapsar, gestos discretos,
    clase .animating prende la transición del transform — ver CSS).
@@ -142,7 +218,9 @@ function updateCloseLabel(){
    vía la clase .expanded, independiente de esto. */
 function setSheetY(vh,animate){
   sheet.classList.toggle('animating',animate);
-  sheet.style.transform=`translateY(${vh}vh)`;
+  /* translate3d (no translateY) para mantener el sheet en su capa de GPU
+     propia y que el compositor no lo suelte un frame — ver CSS .sheet. */
+  sheet.style.transform=`translate3d(0,${vh}vh,0)`;
 }
 function resetSheetShape(){
   scrollHint.style.opacity='1';
@@ -195,21 +273,13 @@ function closeSheet(){
   resetSheetShape();
   backdrop.classList.remove('open'); document.body.classList.remove('sheet-open'); document.body.style.overflow=''; play();
 }
-closeBtn.addEventListener('click',()=>{
-  if(sheet.classList.contains('expanded')){
-    resetScrollPosition();
-    setSheetY(PEEK_VH,true);
-    resetSheetShape();
-    updateCloseLabel();
-  } else {
-    closeSheet();
-  }
-});
+/* El botón de la esquina SIEMPRE cierra el sheet (esté en peek o
+   expandido). */
+closeBtn.addEventListener('click',closeSheet);
 backdrop.addEventListener('click',closeSheet);
 sheetScroll.addEventListener('scroll',onSheetScroll);
 
-/* Pie del case study: cerrar / volver arriba / siguiente proyecto. */
-document.getElementById('footerCloseBtn').addEventListener('click',closeSheet);
+/* Pie del case study: volver arriba / siguiente proyecto. */
 document.getElementById('footerTopBtn').addEventListener('click',()=>{
   sheetScroll.scrollTo({ top:0, behavior:'smooth' });
 });

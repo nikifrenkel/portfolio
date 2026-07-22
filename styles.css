@@ -64,9 +64,11 @@ nav.solid::before{ opacity:1; }
 
 /* HERO (home) */
 header{ padding:clamp(46px,9vh,96px) 0 0; max-width:940px; }
-h1{ font-weight:600; font-size:clamp(60px,12vw,132px); line-height:.9; letter-spacing:-.04em; }
+.hero-kicker{ font-family:var(--font-primary); font-weight:500; font-size:clamp(13px,1.5vw,15.5px); color:var(--ink-soft); letter-spacing:.01em; margin-bottom:16px; }
+h1{ font-weight:900; color:var(--ink); font-size:clamp(46px,9.5vw,104px); line-height:.75; letter-spacing:-.03em; }
+.h1-brick{ color:var(--brick); }
 h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02em; color:var(--brick); margin-top:10px; }
-.desc{ font-size:clamp(19px,2.3vw,27px); font-weight:500; line-height:1.4; color:var(--ink); margin-top:clamp(45px,8vh,95px); }
+.desc{ font-size:clamp(16px,1.9vw,22px); font-weight:600; line-height:1.4; color:var(--ink); margin-top:calc(clamp(22px,4vh,48px) + 40px); }
 .strike{ text-decoration:line-through; text-decoration-color:var(--orange); text-decoration-thickness:2.5px; }
 .hand{ font-family:"Caveat",cursive; font-size:1.42em; font-weight:600; line-height:1; }
 
@@ -77,7 +79,53 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
 .btn.primary{ background:var(--brick); color:var(--cream); }
 .btn.primary:hover{ transform:translateY(-2px); background:var(--ink); }
 .btn.secondary{ background:transparent; color:var(--ink); border-color:var(--ink); }
-.btn.secondary:hover{ transform:translateY(-2px); background:rgba(26,23,18,.05); }
+.btn.secondary:hover{ transform:translateY(-2px); background:rgba(176,74,56,.12); border-color:var(--brick); }
+/* Terciario: menor jerarquía. Botón "texto/ghost" — sin borde en reposo;
+   al hover toma el mismo relleno pale brick + texto brick que el secundario. */
+.btn.tertiary{ background:transparent; color:var(--ink); border-color:transparent; }
+.btn.tertiary:hover{ transform:translateY(-2px); background:rgba(176,74,56,.12); color:var(--brick); }
+
+/* "Sello" / stamp de certificación: pill con doble borde, levemente
+   rotado, como un sello de goma. Se ubica a la derecha del header de
+   Experience. Hover: se endereza un toque. */
+.stamp{ flex-shrink:0;
+  display:inline-flex; align-items:center; gap:12px; padding:10px 20px 10px 16px;
+  color:var(--brick); background:rgba(176,74,56,.05);
+  border:1.5px solid var(--brick); border-radius:100px;
+  box-shadow:0 0 0 3px rgba(176,74,56,.10);   /* aro exterior = look de sello */
+  font-family:var(--font-primary); font-weight:700; font-size:11.5px; line-height:1.25;
+  letter-spacing:.13em; text-transform:uppercase;
+  transform:rotate(-3.5deg); transition:transform .2s ease; }
+.stamp:hover{ transform:rotate(-1.5deg); }
+.stamp-ico{ width:26px; height:26px; flex-shrink:0; }
+
+/* ===== Baraja de cards en abanico (hero, solo desktop) =====
+   Reusa el diseño de .cf-card de "Selected projects". El abanico lo arma
+   app.js: 4 cards de tamaño fijo apiladas en el mismo centro; cada una se
+   corre a la derecha+abajo, se escala y se rota según su profundidad. Acá
+   sólo van el tamaño fijo, la transición del "settle" y el layout. */
+.hero-deck{ display:none; }                    /* oculto por defecto (mobile) */
+.deck-stack{ position:relative; width:300px; height:400px; perspective:1400px; cursor:pointer; }
+/* Wrapper del tilt de parallax con el cursor (lo mueve app.js). Separado
+   de la matemática del abanico —que va en las cards— para que no peleen. */
+.deck-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d;
+  transition:transform .18s ease-out; }
+/* Card del deck: tamaño fijo (pisa el clamp/aspect-ratio de .cf-card). El
+   transform / opacity / z-index reales los aplica app.js (renderDeck). */
+.deck-card{ width:300px; height:400px; aspect-ratio:auto;
+  transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .5s;
+  will-change:transform, opacity; }
+.deck-card .cf-content{ padding:20px 20px 18px; gap:6px; }
+.deck-dots{ display:flex; justify-content:center; gap:8px; margin-top:26px; }
+
+/* Sólo en desktop ancho: el hero pasa a dos columnas (texto + deck) y el
+   deck aparece en el espacio libre de la derecha. */
+@media (min-width:1060px){
+  header{ max-width:none; display:grid; align-items:center;
+    grid-template-columns:minmax(0,1fr) minmax(300px,340px);
+    gap:clamp(24px,3vw,48px); }
+  .hero-deck{ display:flex; flex-direction:column; align-items:center; justify-self:center; }
+}
 
 /* ================= EFECTO OVERLAP (Home fija + capa blanca que sube) ================= */
 /* Home queda fija (sticky) y el bloque "My journey → Contact" sube por encima
@@ -87,7 +135,7 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
   min-height:100vh; min-height:100svh;      /* llena el viewport para que la capa arranque en el borde */
   display:flex; flex-direction:column;
 }
-#home .teams{ margin-top:80px; }
+#home .teams{ margin-top:120px; }
 
 .overlap{
   position:relative; z-index:2;              /* z-index mayor que Home (1) y menor que el nav (50) */
@@ -133,10 +181,13 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
 }
 
 .journey{ padding:clamp(30px,5vh,52px) 0 30px; }
-.journey-head{ max-width:760px; }
+.journey-head{ display:flex; align-items:center; justify-content:space-between; gap:clamp(20px,4vw,48px); }
+.journey-head-text{ max-width:760px; }
+@media (max-width:760px){
+  .journey-head{ flex-direction:column; align-items:flex-start; gap:24px; }
+}
 .journey-title{ font-weight:600; font-size:clamp(26px,3.6vw,42px); letter-spacing:-.025em; line-height:1.15; color:var(--ink); margin-top:14px; }
-.btn.secondary.cv-btn{ margin-top:22px; font-size:14.5px; padding:11px 20px 9px; border-color:transparent; border-bottom:2px solid transparent; border-radius:0; }
-.btn.secondary.cv-btn:hover{ transform:none; background:transparent; color:var(--ink); border-color:transparent; border-bottom-color:var(--brick); }
+.btn.tertiary.cv-btn{ margin-top:22px; font-size:14.5px; padding:11px 20px; }
 .cv-btn .cv-ico{ font-weight:700; font-size:16px; line-height:1; transition:transform .2s ease; }
 .cv-btn:hover .cv-ico{ transform:translateY(2px); }
 .teams{ margin-top:clamp(40px,7vh,72px); }
@@ -230,7 +281,7 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
 /* Card "portada inmersiva": foto de fondo + degradado oscuro + texto
    encima. Si el proyecto no tiene imagen (campo `cover` en content.js),
    .cf-cover cae en el fondo de color liso de siempre (nth-child). */
-.cf-card{ position:absolute; top:50%; left:50%; width:clamp(240px,30vw,330px); aspect-ratio:360/560;
+.cf-card{ position:absolute; top:50%; left:50%; width:clamp(264px,calc(30vw + 24px),354px); aspect-ratio:360/500;
   border-radius:26px; overflow:hidden; background:#fff;
   box-shadow:0 26px 60px -18px rgba(43,36,32,.45);
   transform-style:preserve-3d; transition:transform .5s cubic-bezier(.22,.61,.36,1), opacity .5s, filter .5s;
@@ -249,7 +300,9 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
 .cf-chips{ display:flex; flex-wrap:wrap; gap:7px; }
 .cf-chips span{ font-weight:600; font-size:11px; padding:6px 12px; border-radius:999px; background:rgba(253,251,248,.14); color:rgba(253,251,248,.88); }
 .cf-cta{ margin-top:10px; height:46px; border-radius:10px; border:0; background:#FDFBF8; color:#211B17;
-  font-family:var(--font-primary); font-weight:600; font-size:13.5px; cursor:pointer; }
+  font-family:var(--font-primary); font-weight:600; font-size:13.5px; cursor:pointer;
+  transition:background .18s ease, color .18s ease; }
+.cf-cta:hover{ background:var(--brick); color:#fff; }
 .controls{ display:flex; align-items:center; justify-content:center; gap:18px; margin-top:22px; }
 .nav-btn{ width:52px; height:52px; border-radius:50%; border:1px solid var(--ink); background:transparent; color:var(--ink); font-size:20px; cursor:pointer; display:grid; place-items:center; transition:background .18s, color .18s, transform .18s; }
 .nav-btn:hover{ background:var(--ink); color:var(--cream); transform:translateY(-2px); }
@@ -289,16 +342,23 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
 body.sheet-open .wrap{ filter:blur(16px); }
 
 .sheet{
-  --cs-brick:#B4451F; --cs-coral:#F0997B; --cs-cream:#fdfbf8; --cs-ink:#211b17; --cs-ink-soft:#5c5048;
+  --cs-brick:#B04A38; --cs-coral:#F0997B; --cs-cream:#fdfbf8; --cs-ink:#211b17; --cs-ink-soft:#5c5048;
   --cs-surface:#EFE7DD; --cs-border:#E1D5C6; --cs-muted:#9C9086;
   position:fixed; left:0; right:0; top:0; z-index:70;
   height:100vh;
   background:var(--cs-cream); color:var(--cs-ink);
   border-radius:28px 28px 0 0;
   box-shadow:0 -24px 70px -24px rgba(90,60,30,.55);
-  transform:translateY(101vh);
+  transform:translate3d(0,101vh,0);
   overflow:hidden;
   transition:border-radius .3s ease; /* siempre activa, independiente del transform */
+  /* El sheet vive SIEMPRE en su propia capa de GPU estable. Sin esto el
+     compositor lo puede "soltar" un frame durante la animación de transform
+     y se ve el fondo a través (el famoso parpadeo). translate3d/backface/
+     will-change lo fuerzan a una capa propia que no se descarta. */
+  will-change:transform;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  -webkit-transform:translate3d(0,101vh,0);
 }
 /* El border-radius NO se anima en cada evento de scroll (eso, combinado
    con el blur del backdrop detrás, es lo que causaba el flash a negro en
@@ -319,9 +379,6 @@ body.sheet-open .wrap{ filter:blur(16px); }
   transition:background .18s, color .18s; }
 .close:hover{ background:var(--cs-ink); color:var(--cs-cream); }
 .close svg{ width:16px; height:16px; }
-.close .icon-collapse{ display:none; }
-.sheet.expanded .close .icon-close{ display:none; }
-.sheet.expanded .close .icon-collapse{ display:block; }
 
 /* Hint "scroll to explore": pinneado arriba, se apaga a medida que se scrollea */
 .cs-scroll-hint{ position:absolute; top:14px; left:0; right:0; z-index:9; display:flex; flex-direction:column;
@@ -418,7 +475,7 @@ body.sheet-open .wrap{ filter:blur(16px); }
    HTML del case study, escopeadas acá adentro (con otros valores que las
    --cs-* de la plantilla genérica) para no pisar nada del resto del sitio. */
 .cs-custom{
-  --brick:#B4451F; --coral:#F0997B; --coral-lt:#E9C5B6; --cream:#fdfbf8; --cream2:#f6efe8;
+  --brick:#B04A38; --coral:#F0997B; --coral-lt:#E9C5B6; --cream:#fdfbf8; --cream2:#f6efe8;
   --ink:#211b17; --muted:#8a7d73; --sec:#5f5349; --border:#e7ddd4; --dark:#2b2420;
   max-width:var(--maxw); margin:0 auto; font-family:'Nunito Sans',sans-serif;
 }

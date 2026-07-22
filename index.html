@@ -41,18 +41,33 @@
       <!-- ===================== HOME ===================== -->
       <section id="home">
       <header>
-        <h1 data-en="Hello!" data-es="Hola!">Hello!</h1>
-        <h2 class="name" data-en="— It's Nicole &quot;Frenkel&quot;" data-es="— Soy Nicole &quot;Frenkel&quot;">— It's Nicole "Frenkel"</h2>
+        <div class="hero-copy">
+        <div class="hero-kicker" data-en="Nicole Frenkel · Sr. UX/UI Designer · Based in Buenos Aires, Argentina" data-es="Nicole Frenkel · Diseñadora Sr. UX/UI · En Buenos Aires, Argentina">Nicole Frenkel · Sr. UX/UI Designer · Based in Buenos Aires, Argentina</div>
+        <h1 data-en="COMPLEX,<br><span class='h1-brick'>CLARIFIED.</span>" data-es="COMPLEJO,<br><span class='h1-brick'>CLARIFICADO.</span>">COMPLEX,<br><span class="h1-brick">CLARIFIED.</span></h1>
 
         <p class="desc"
-           data-en="Five years in UX/UI<br>Eight in product design<br>and a lifetime caring about details <span class='hand'>(and cats)</span>."
-           data-es="Cinco años en UX/UI<br>Ocho en diseño de producto<br>y toda una vida cuidando los detalles <span class='hand'>(y los gatos)</span>.">
-           Five years in UX/UI<br>Eight in product design<br>and a lifetime caring about details <span class="hand">(and cats)</span>.
+           data-en="Designing <span class='hl'>simple experiences</span> for complex industries.<br>· 5 years in UX/UI Design<br>· 8 years in Product Design"
+           data-es="Diseñando <span class='hl'>experiencias simples</span> para industrias complejas.<br>· 5 años en Diseño UX/UI<br>· 8 años en Diseño de Producto">
+           Designing <span class="hl">simple experiences</span> for complex industries.<br>· 5 years in UX/UI Design<br>· 8 years in Product Design
         </p>
 
         <div class="btns">
           <a class="btn primary" href="#journey" data-nav="journey" data-en="Experience <span class='arw'>→</span>" data-es="Experiencia <span class='arw'>→</span>">Experience <span class="arw">→</span></a>
           <a class="btn secondary" href="#contact" data-nav="contact" data-en="Get in touch" data-es="Contactame">Get in touch</a>
+        </div>
+        </div><!-- /.hero-copy -->
+
+        <!-- Baraja de cards en abanico (solo desktop): rellena el espacio
+             libre a la derecha del hero. Reusa el mismo diseño de card de
+             "Selected projects" (.cf-card) con los primeros 4 proyectos de
+             content.js. El abanico y la animación se arman en app.js.
+             Es decorativa (aria-hidden): los mismos proyectos ya están,
+             accesibles, en la sección "Selected projects". -->
+        <div class="hero-deck" id="deck" aria-hidden="true">
+          <div class="deck-stack">
+            <div class="deck-inner"></div>
+          </div>
+          <div class="deck-dots"></div>
         </div>
 
       </header>
@@ -76,9 +91,19 @@
       <!-- ===================== MY JOURNEY (CV) ===================== -->
       <section class="journey" id="journey">
         <div class="journey-head">
-          <div class="marquee-label" data-en="Experience" data-es="Experiencia">Experience</div>
-          <h2 class="journey-title" data-en="From Argentine finance to U.S. healthcare — <span class='hl'>simplifying complexity through design</span>." data-es="Desde el sistema bancario en Argentina a la industria de salud en EE.UU. — <span class='hl'>simplificando la complejidad a través del diseño</span>.">From Argentine finance to U.S. healthcare — <span class="hl">simplifying complexity through design</span>.</h2>
-          <a class="btn secondary cv-btn" href="assets/nicole-frenkel-experience.pdf" download data-en="<span class='cv-ico' aria-hidden='true'>↓</span> Download PDF" data-es="<span class='cv-ico' aria-hidden='true'>↓</span> Descargar PDF"><span class="cv-ico" aria-hidden="true">↓</span> Download PDF</a>
+          <div class="journey-head-text">
+            <div class="marquee-label" data-en="Experience" data-es="Experiencia">Experience</div>
+            <h2 class="journey-title" data-en="From Argentine finance to U.S. healthcare — <span class='hl'>simplifying complexity through design</span>." data-es="Desde el sistema bancario en Argentina a la industria de salud en EE.UU. — <span class='hl'>simplificando la complejidad a través del diseño</span>.">From Argentine finance to U.S. healthcare — <span class="hl">simplifying complexity through design</span>.</h2>
+            <a class="btn tertiary cv-btn" href="assets/nicole-frenkel-experience.pdf" download data-en="<span class='cv-ico' aria-hidden='true'>↓</span> Download PDF" data-es="<span class='cv-ico' aria-hidden='true'>↓</span> Descargar PDF"><span class="cv-ico" aria-hidden="true">↓</span> Download PDF</a>
+          </div>
+          <div class="stamp" role="img" aria-label="Professional complexity untangler">
+            <svg class="stamp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="9" r="6.2"/>
+              <path d="M9.4 9.1l1.9 1.8 3.4-3.6"/>
+              <path d="M8.7 14.4 7.3 21.2l4.7-2.5 4.7 2.5-1.4-6.8"/>
+            </svg>
+            <span data-en="Professional<br>complexity untangler" data-es="Desenredadora profesional<br>de complejidad">Professional<br>complexity untangler</span>
+          </div>
         </div>
         <div class="timeline">
           <div class="tl-item">
@@ -236,7 +261,6 @@
 
     <button class="close" id="closeSheet" aria-label="close">
       <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l6 6 6-6"/></svg>
     </button>
 
     <div class="cs-scroll-hint" id="scrollHint" aria-hidden="true">
@@ -382,7 +406,7 @@
               <p class="cap">Before — content-heavy marketing page</p>
             </div>
             <div>
-              <span class="tag" style="background:#B4451F;color:#fff;margin-bottom:10px;">To</span>
+              <span class="tag" style="background:#B04A38;color:#fff;margin-bottom:10px;">To</span>
               <div class="browser"><div class="bbar"><span style="background:#E24B4A"></span><span style="background:#EF9F27"></span><span style="background:#639922"></span></div><img src="assets/case-studies/medicare/img-02.jpg" alt="Homepage after" width="640" height="448" loading="lazy"></div>
               <p class="cap">After — guided shopping journey</p>
             </div>
@@ -572,10 +596,6 @@
            plantilla genérica o una a medida): cerrar / volver arriba /
            siguiente proyecto. -->
       <div class="cs-footer-nav">
-        <button class="cs-footer-btn" id="footerCloseBtn" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-          <span data-en="Close" data-es="Cerrar">Close</span>
-        </button>
         <button class="cs-footer-btn" id="footerTopBtn" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 14l-6-6-6 6"/></svg>
           <span data-en="Back to top" data-es="Volver arriba">Back to top</span>

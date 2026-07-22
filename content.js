@@ -55,9 +55,6 @@
    ============================================================ */
 
 const projects = [
-  { title:"Banco Galicia", role_en:"Product · UX/UI · fintech", role_es:"Producto · UX/UI · fintech",
-    desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome (with a metric if you have one).",
-    desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones y trade-offs clave, y el resultado (con una métrica si tenés)." },
   { title:"AI-Powered Medicare Shopping Experience", role_en:"UX · US healthcare", role_es:"UX · salud EE.UU.",
     desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones clave y el resultado.",
@@ -69,6 +66,9 @@ const projects = [
     chips_en:["Simplify plan discovery","Reduce cognitive load","AI personalization","Boost recommendations"],
     chips_es:["Simplificar la búsqueda de planes","Reducir la carga cognitiva","Personalización con IA","Mejorar las recomendaciones"],
     cta_en:"Project Overview", cta_es:"Resumen del proyecto" },
+  { title:"Banco Galicia", role_en:"Product · UX/UI · fintech", role_es:"Producto · UX/UI · fintech",
+    desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome (with a metric if you have one).",
+    desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones y trade-offs clave, y el resultado (con una métrica si tenés)." },
   { title:"Carestino", role_en:"E-commerce · UX/UI", role_es:"E-commerce · UX/UI",
     desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
