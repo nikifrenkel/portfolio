@@ -506,6 +506,15 @@ body.sheet-open .wrap{ filter:blur(16px); }
 .cs-custom .sec{ display:grid; gap:44px; align-items:center; }
 .cs-custom .tag{ display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:1.5px; font-weight:700; text-transform:uppercase; padding:4px 10px; border-radius:100px; }
 .cs-custom .stream{ background:#fff; border:.5px solid var(--border); border-radius:14px; padding:22px; }
+.cs-custom .stat{ background:#fff; border:.5px solid var(--border); border-radius:14px; padding:22px; text-align:center; }
+.cs-custom .stat .n{ font-family:'Archivo',sans-serif; font-weight:800; font-size:34px; line-height:1; color:var(--brick); letter-spacing:-.03em; }
+.cs-custom .stat p{ margin:8px 0 0; font-size:12.5px; line-height:1.45; color:var(--sec); }
+/* Placeholders de este case study (todavía sin capturas): mismo rol que
+   las imágenes reales — cuando estén, se reemplaza el <div class="ph"> por
+   un <img> dentro del .browser/.phone, igual que en el de Medicare. */
+.cs-custom .ph{ background:#f3ede7; border:1px dashed #d9c9bc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#a89588; }
+.cs-custom .ph .plus{ width:30px; height:30px; border-radius:50%; border:1px dashed #c9b5a6; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.cs-custom .ph small{ font-size:9px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700; }
 @media (max-width:760px){
   .cs-custom .sec,.cs-custom .cmp,.cs-custom .streams{ grid-template-columns:1fr !important; }
 }

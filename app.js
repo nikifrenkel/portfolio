@@ -116,7 +116,7 @@ if(deckEl){
   const deckInner=deckEl.querySelector('.deck-inner');
   const deckStack=deckEl.querySelector('.deck-stack');
   const deckDotsWrap=deckEl.querySelector('.deck-dots');
-  const DN=4;                                   // cantidad de cards del deck
+  const DN=Math.min(4,projects.length);         // cantidad de cards del deck (hasta 4, o menos si hay menos proyectos)
   const reduceMotion=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   const deckData=projects.slice(0,DN);
   let deckActive=0, deckHover=false, deckTimer=null, deckTilt={x:0,y:0};
