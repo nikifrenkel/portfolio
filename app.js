@@ -169,8 +169,16 @@ if(deckEl){
   });
   deckStack.addEventListener('mouseenter',()=>{ deckHover=true; });
   deckStack.addEventListener('mouseleave',()=>{ deckHover=false; deckTilt={x:0,y:0}; applyTilt(); });
-  /* Click en la baraja: baraja +1 al instante (mismo salto que el auto). */
-  deckStack.addEventListener('click',()=>{ deckActive=(deckActive+1)%DN; renderDeck(); playDeck(); });
+  /* Click en una card: si es la de adelante, abre su case study (bottom
+     sheet). Si es una de atrás (las que asoman), la trae al frente —igual
+     que el carrusel. Click fuera de las cards: baraja +1. */
+  deckStack.addEventListener('click',e=>{
+    const cardEl=e.target.closest('.deck-card');
+    const i=cardEl?deckCards.indexOf(cardEl):-1;
+    if(i===-1){ deckActive=(deckActive+1)%DN; renderDeck(); playDeck(); return; }
+    if(i===deckActive){ openSheet(i); return; }        // la de adelante → abre su bottom sheet
+    deckActive=i; renderDeck(); playDeck();             // una de atrás → la trae al frente
+  });
 
   renderDeck();
   playDeck();

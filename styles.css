@@ -108,7 +108,13 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
 .deck-stack{ position:relative; width:300px; height:400px; perspective:1400px; cursor:pointer; }
 /* Wrapper del tilt de parallax con el cursor (lo mueve app.js). Separado
    de la matemática del abanico —que va en las cards— para que no peleen. */
-.deck-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d;
+/* OJO: sin transform-style:preserve-3d a propósito. Con preserve-3d el
+   navegador ordena las cards por profundidad 3D / orden del DOM e IGNORA el
+   z-index para el hit-testing, así que el click sobre la card de adelante
+   caía en otra card y no abría su bottom sheet. En contexto 2D (flat) el
+   z-index manda para pintar y para el click. El tilt igual funciona: la
+   perspective vive en .deck-stack y rota este wrapper como un plano. */
+.deck-inner{ position:relative; width:100%; height:100%;
   transition:transform .18s ease-out; }
 /* Card del deck: tamaño fijo (pisa el clamp/aspect-ratio de .cf-card). El
    transform / opacity / z-index reales los aplica app.js (renderDeck). */
@@ -117,6 +123,11 @@ h2.name{ font-weight:500; font-size:clamp(24px,3.4vw,44px); letter-spacing:-.02e
   will-change:transform, opacity; }
 .deck-card .cf-content{ padding:20px 20px 18px; gap:6px; }
 .deck-dots{ display:flex; justify-content:center; gap:8px; margin-top:26px; }
+/* Dots del deck sobre el fondo claro del hero: blancos, y sólo el óvalo
+   activo en brick. (El carrusel sigue usando .dot sin cambios, porque va
+   sobre fondo blanco donde el color claro sí se ve.) */
+.deck-dots .dot{ background:#fff; box-shadow:0 1px 3px rgba(26,23,18,.20); }
+.deck-dots .dot.active{ background:var(--brick); box-shadow:none; }
 
 /* Sólo en desktop ancho: el hero pasa a dos columnas (texto + deck) y el
    deck aparece en el espacio libre de la derecha. */
