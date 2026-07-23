@@ -70,7 +70,7 @@ const projects = [
     desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones clave y el resultado.",
     caseStudyEl:"csShopPages",
-    cover:"assets/case-studies/medicare/Shop%20Hub%20page%20redesign%20-%20Desktop.jpg", coverPos:"top center",
+    cover:"assets/case-studies/medicare/shop-hub-cover.jpg", coverPos:"top center",
     eyebrow_en:"UHG · Responsive Web", eyebrow_es:"UHG · Web responsive",
     blurb_en:"Rebuilding six high-traffic Medicare plan pages into one scalable, scannable system.",
     blurb_es:"Reconstruir seis páginas de planes de Medicare de alto tráfico en un único sistema escalable y escaneable.",

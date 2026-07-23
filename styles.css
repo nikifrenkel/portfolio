@@ -379,8 +379,12 @@ body.sheet-open .wrap{ filter:blur(16px); }
   contain:layout paint;
   will-change:transform; /* sólo transform se compone en GPU; width/top no */
   backface-visibility:hidden; -webkit-backface-visibility:hidden;
-  transition:transform .42s cubic-bezier(.22,.61,.36,1),
-             width .3s ease, top .3s ease, border-radius .3s ease;
+  /* Sólo animamos el slide (transform). El paso a fullscreen (width/top/
+     border-radius vía .full) NO se anima: salta en un frame. Animar ese
+     resize obligaba a la capa GPU a reasignar su backing store cada frame
+     y por uno quedaba sin pintar → flash negro. Al saltar de una, no hay
+     reasignación progresiva y desaparece el parpadeo. */
+  transition:transform .42s cubic-bezier(.22,.61,.36,1);
 }
 .sheet.open{ transform:translateY(0); } /* deslizado hasta su lugar de reposo */
 /* ESTADO EXPANDIDO: pantalla completa. Pierde el hueco de arriba, el ancho
