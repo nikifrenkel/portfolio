@@ -116,9 +116,13 @@ if(deckEl){
   const deckInner=deckEl.querySelector('.deck-inner');
   const deckStack=deckEl.querySelector('.deck-stack');
   const deckDotsWrap=deckEl.querySelector('.deck-dots');
-  const DN=Math.min(4,projects.length);         // cantidad de cards del deck (hasta 4, o menos si hay menos proyectos)
+  /* La home (deck) muestra hasta 4 proyectos, EXCLUYENDO los marcados con
+     hideOnHome:true en content.js (p. ej. Plantita, que vive sólo en el
+     carrusel). El carrusel sí los muestra todos. */
+  const deckSource=projects.filter(p=>!p.hideOnHome);
+  const DN=Math.min(4,deckSource.length);       // cantidad de cards del deck (hasta 4, o menos si hay menos proyectos)
   const reduceMotion=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const deckData=projects.slice(0,DN);
+  const deckData=deckSource.slice(0,DN);
   let deckActive=0, deckHover=false, deckTimer=null, deckTilt={x:0,y:0};
 
   /* Arma las 4 cards (mismo markup que el carrusel: portada + scrim +
@@ -255,12 +259,14 @@ function applyScrollProgress(){
 function openSheet(i){
   current=i; render();
   renderSheetText();
+  updateFooterNav();
   sheetOpen=true; stop();
   resetSheetShape();
   resetScrollPosition();
   /* Blureamos el fondo ANTES de deslizar el sheet, así el blur ya está
      aplicado y estático cuando arranca la animación (no compiten). */
   document.body.classList.add('sheet-open'); document.body.style.overflow='hidden';
+  sheet.classList.add('animating'); // promueve a capa GPU sólo para el slide
   sheet.classList.add('open'); // sube desde abajo (transform, ver CSS)
   backdrop.classList.add('open');
   updateCloseLabel();
@@ -268,20 +274,33 @@ function openSheet(i){
 function closeSheet(){
   if(!sheetOpen) return;
   sheetOpen=false;
+  sheet.classList.add('animating'); // capa GPU para el slide de salida
   sheet.classList.remove('open'); // baja hasta salir de la pantalla
   resetSheetShape();
   backdrop.classList.remove('open'); document.body.classList.remove('sheet-open'); document.body.style.overflow=''; play();
 }
+/* Al terminar el slide, sacamos will-change: en reposo el sheet NO es capa
+   GPU, así el salto a fullscreen (resize) es un repintado normal sin negro. */
+sheet.addEventListener('transitionend', e=>{ if(e.propertyName==='transform') sheet.classList.remove('animating'); });
 closeBtn.addEventListener('click',closeSheet);
 backdrop.addEventListener('click',closeSheet);
 sheetScroll.addEventListener('scroll',onSheetScroll);
 
-/* Pie del case study: volver arriba / siguiente proyecto. */
+/* Pie del case study: proyecto anterior / volver arriba / proyecto siguiente.
+   Los botones anterior/siguiente muestran el NOMBRE del proyecto destino. */
+function updateFooterNav(){
+  const n=projects.length;
+  document.getElementById('footerPrevName').textContent=projects[(current-1+n)%n].title;
+  document.getElementById('footerNextName').textContent=projects[(current+1)%n].title;
+}
 document.getElementById('footerTopBtn').addEventListener('click',()=>{
   sheetScroll.scrollTo({ top:0, behavior:'smooth' });
 });
 document.getElementById('footerNextBtn').addEventListener('click',()=>{
   openSheet((current+1)%projects.length);
+});
+document.getElementById('footerPrevBtn').addEventListener('click',()=>{
+  openSheet((current-1+projects.length)%projects.length);
 });
 
 /* ---------- Recommendations (testimonios) ----------

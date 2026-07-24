@@ -376,16 +376,17 @@ body.sheet-open .wrap{ filter:blur(16px); }
   box-shadow:0 -24px 70px -24px rgba(90,60,30,.55);
   transform:translateY(100%); /* arranca fuera de la pantalla, abajo */
   overflow:hidden;
-  contain:layout paint;
-  will-change:transform; /* sólo transform se compone en GPU; width/top no */
-  backface-visibility:hidden; -webkit-backface-visibility:hidden;
-  /* Sólo animamos el slide (transform). El paso a fullscreen (width/top/
-     border-radius vía .full) NO se anima: salta en un frame. Animar ese
-     resize obligaba a la capa GPU a reasignar su backing store cada frame
-     y por uno quedaba sin pintar → flash negro. Al saltar de una, no hay
-     reasignación progresiva y desaparece el parpadeo. */
+  /* contain:layout (NO paint) aísla el layout SIN forzar un único raster de
+     toda la hoja. Clave: el sheet se promueve a capa GPU SÓLO mientras se
+     desliza (clase .animating, ver JS), no en reposo. Así el salto a
+     fullscreen (.full: cambia width/top) es un repintado normal y NO reasigna
+     el backing store de una capa gigante — eso era lo que dejaba ~1s de negro
+     al expandir. El slide (transform) sigue siendo suave por .animating. */
+  contain:layout;
   transition:transform .42s cubic-bezier(.22,.61,.36,1);
 }
+/* Capa GPU sólo durante el slide de abrir/cerrar; JS la saca al terminar. */
+.sheet.animating{ will-change:transform; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
 .sheet.open{ transform:translateY(0); } /* deslizado hasta su lugar de reposo */
 /* ESTADO EXPANDIDO: pantalla completa. Pierde el hueco de arriba, el ancho
    máximo y el border-radius; el borde superior se desvanece. */
@@ -394,8 +395,12 @@ body.sheet-open .wrap{ filter:blur(16px); }
   border-radius:0; border-top-color:transparent;
 }
 
-.sheet-scroll{ height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; overflow-anchor:none; }
-.sheet-inner{ position:relative; }
+/* Fondo opaco en el contenedor que scrollea: su capa de scroll necesita un
+   respaldo pintado o, al pasar por imágenes grandes (userflow, IA), los tiles
+   que todavía no se rasterizaron se ven NEGROS. Con el crema, cualquier área
+   sin pintar muestra crema, no negro. */
+.sheet-scroll{ height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; overflow-anchor:none; background:var(--cs-cream); }
+.sheet-inner{ position:relative; background:var(--cs-cream); }
 
 .close{ position:absolute; top:14px; right:clamp(14px,4vw,28px); z-index:10; width:34px; height:34px; border-radius:50%;
   border:1px solid var(--cs-border); background:#fff; color:var(--cs-ink);
@@ -493,6 +498,12 @@ body.sheet-open .wrap{ filter:blur(16px); }
 .cs-footer-btn svg{ width:15px; height:15px; }
 .cs-footer-btn.primary{ background:var(--cs-brick); color:var(--cs-cream); border-color:var(--cs-brick); }
 .cs-footer-btn.primary:hover{ background:var(--cs-ink); border-color:var(--cs-ink); }
+/* Botones anterior/siguiente: eyebrow chico + nombre del proyecto en 2 líneas */
+.cs-footer-dir{ max-width:44%; }
+.cs-footer-txt{ display:flex; flex-direction:column; gap:2px; line-height:1.25; min-width:0; text-align:left; }
+.cs-footer-dir-next .cs-footer-txt{ text-align:right; }
+.cs-footer-eyebrow{ font-size:9.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; opacity:.68; }
+.cs-footer-name{ font-size:14px; font-weight:700; white-space:normal; }
 
 /* ---- Case study a medida: UHC · Tietoevry (Medicare) ----
    Variables y clases con los nombres/valores exactos que vinieron en el
@@ -547,6 +558,40 @@ body.sheet-open .wrap{ filter:blur(16px); }
 .cs-custom .syslabel{ margin:10px 0 0; text-align:center; font-size:12px; font-weight:700; color:var(--ink); }
 @media (max-width:760px){
   .cs-custom .sec,.cs-custom .cmp,.cs-custom .streams{ grid-template-columns:1fr !important; }
+}
+
+/* ===================== PLANTITA — identidad verde =====================
+   Mismo esqueleto que los otros case studies (clases .cs-custom); sólo
+   redefinimos las variables de color para que TODO (klabel.brick, chips,
+   bignum, stat, paneles oscuros…) tome la paleta verde de Plantita, sin
+   tocar el resto de los sheets. Paleta oficial del proyecto:
+   verde #507651 · oliva #9BA560 · sage #EEF2E4 · marrón #391E13. */
+#csPlantita{
+  --brick:#507651;      /* acento primario (verde) */
+  --coral:#9BA560;      /* acento cálido → oliva (labels sobre panel oscuro) */
+  --coral-lt:#C8D2A6;   /* tinte claro para los números grandes (bignum) */
+  --cream:#fdfcf9; --cream2:#EEF2E4;   /* fondos claros con tinte sage */
+  --dark:#3A2A1D;       /* paneles oscuros → marrón cálido de la paleta */
+  --sec:#5a5347; --muted:#8f897c; --border:#e4e2d6; --ink:#221d16;
+}
+#csPlantita .chip{ color:#4a6a34; background:#eef2e4; border-color:#dbe6c9; }
+/* Grilla de features / personas: cae a 1 columna en mobile */
+#csPlantita .pl-grid{ display:grid; gap:16px; }
+#csPlantita .pl-feat{ background:#fff; border:.5px solid var(--border); border-radius:14px; padding:22px; }
+#csPlantita .pl-feat .n{ font-family:'Archivo',sans-serif; font-weight:800; font-size:15px; color:var(--brick); }
+/* Tabla de benchmark */
+#csPlantita .pl-bench{ width:100%; border-collapse:collapse; font-size:13.5px; }
+#csPlantita .pl-bench th,#csPlantita .pl-bench td{ padding:11px 12px; border-bottom:.5px solid var(--border); text-align:center; }
+#csPlantita .pl-bench th:first-child,#csPlantita .pl-bench td:first-child{ text-align:left; color:var(--sec); font-weight:600; }
+#csPlantita .pl-bench thead th{ color:var(--ink); font-weight:700; }
+#csPlantita .pl-bench .yes{ color:#4e8a3a; font-weight:700; }
+#csPlantita .pl-bench .no{ color:#c0563f; font-weight:700; }
+#csPlantita .pl-bench tr.mine th,#csPlantita .pl-bench tr.mine td{ background:#eef2e4; }
+/* Swatch de la paleta de color */
+#csPlantita .pl-sw{ display:flex; gap:0; border-radius:12px; overflow:hidden; border:.5px solid var(--border); }
+#csPlantita .pl-sw span{ flex:1; height:66px; }
+@media (max-width:760px){
+  #csPlantita .pl-grid[data-cols]{ grid-template-columns:1fr !important; }
 }
 
 /* ===================== RECOMMENDATIONS ===================== */

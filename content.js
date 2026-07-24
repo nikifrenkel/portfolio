@@ -77,6 +77,11 @@ const projects = [
     chips_en:["Scale experiences","Clarify complexity","Build reusable systems","Design for constraints"],
     chips_es:["Escalar experiencias","Clarificar la complejidad","Construir sistemas reutilizables","Diseñar con restricciones"],
     cta_en:"Project Overview", cta_es:"Resumen del proyecto" },
+  /* ===== PROYECTOS OCULTOS POR AHORA =====================================
+     Estos 3 todavía no tienen su case study cargado, así que quedan afuera
+     del carrusel. Para volver a mostrar uno: cortá su bloque de acá adentro
+     y pegalo arriba de esta línea (o sacá los tres borrando esta línea de
+     comentario y la que dice FIN PROYECTOS OCULTOS más abajo).
   { title:"Miller Zell", role_en:"Retail experience", role_es:"Experiencia retail",
     desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
@@ -86,6 +91,18 @@ const projects = [
   { title:"UI Case Study", role_en:"UI · Visual design", role_es:"UI · Diseño visual",
     desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
+  ===== FIN PROYECTOS OCULTOS ===== */
+  { title:"Plant Care UX/UI Case Study", role_en:"UX/UI · Personal project", role_es:"UX/UI · Proyecto personal",
+    desc_en:"A self-initiated UX/UI case study for a plant-care mobile app.",
+    desc_es:"Un caso de estudio de UX/UI de iniciativa propia para una app de cuidado de plantas.",
+    caseStudyEl:"csPlantita", hideOnHome:true,
+    cover:"assets/case-studies/plantita/cover.jpg", coverPos:"center",
+    eyebrow_en:"Personal project · Mobile App", eyebrow_es:"Proyecto personal · App mobile",
+    blurb_en:"Plantita — helping plant owners build better care habits.",
+    blurb_es:"Plantita — ayudando a construir mejores hábitos de cuidado de plantas.",
+    chips_en:["UI Components","Design Exploration","User Flows","Mobile Experience"],
+    chips_es:["Componentes de UI","Exploración de diseño","User flows","Experiencia mobile"],
+    cta_en:"View case study", cta_es:"Ver caso de estudio" },
 ];
 
 /* ============================================================
