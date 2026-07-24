@@ -489,17 +489,21 @@ body.sheet-open .wrap{ filter:blur(16px); }
 
 /* Barra al pie del case study (siempre después del contenido, genérico o
    a medida): cerrar / volver arriba / pasar al siguiente proyecto. */
-.cs-footer-nav{ display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
+.cs-footer-nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
   margin:72px clamp(20px,5vw,48px) 0; padding:28px clamp(20px,5vw,48px) 44px; border-top:1px solid var(--cs-border); }
-.cs-footer-btn{ display:inline-flex; align-items:center; gap:8px; font-family:var(--font-primary); font-weight:600;
-  font-size:14px; cursor:pointer; border-radius:100px; padding:12px 22px; border:1px solid var(--cs-border);
-  background:#fff; color:var(--cs-ink); transition:background .18s, color .18s, border-color .18s, transform .18s; }
-.cs-footer-btn:hover{ transform:translateY(-2px); background:var(--cs-ink); color:var(--cs-cream); border-color:var(--cs-ink); }
-.cs-footer-btn svg{ width:15px; height:15px; }
-.cs-footer-btn.primary{ background:var(--cs-brick); color:var(--cs-cream); border-color:var(--cs-brick); }
-.cs-footer-btn.primary:hover{ background:var(--cs-ink); border-color:var(--cs-ink); }
+/* Anterior / Siguiente = secondary (contorno). SIN transform en hover: un
+   transform promueve el botón a capa GPU dentro del sheet gigante y el
+   repintado quedaba ~1s en negro. Sólo cambian color/borde/fondo. */
+.cs-footer-btn{ display:inline-flex; align-items:center; gap:10px; font-family:var(--font-primary); font-weight:600;
+  font-size:14px; cursor:pointer; border-radius:100px; padding:12px 20px; border:1px solid var(--cs-border);
+  background:transparent; color:var(--cs-ink); transition:background .18s, color .18s, border-color .18s; }
+.cs-footer-btn:hover{ background:rgba(176,74,56,.08); color:var(--cs-brick); border-color:var(--cs-brick); }
+.cs-footer-btn svg{ width:15px; height:15px; flex:none; }
+/* Volver arriba = tertiary: sólo texto, sin borde ni fondo. */
+.cs-footer-btn.tertiary{ border-color:transparent; background:transparent; color:var(--cs-ink-soft); }
+.cs-footer-btn.tertiary:hover{ background:transparent; border-color:transparent; color:var(--cs-brick); }
 /* Botones anterior/siguiente: eyebrow chico + nombre del proyecto en 2 líneas */
-.cs-footer-dir{ max-width:44%; }
+.cs-footer-dir{ max-width:42%; }
 .cs-footer-txt{ display:flex; flex-direction:column; gap:2px; line-height:1.25; min-width:0; text-align:left; }
 .cs-footer-dir-next .cs-footer-txt{ text-align:right; }
 .cs-footer-eyebrow{ font-size:9.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; opacity:.68; }
