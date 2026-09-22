@@ -189,22 +189,13 @@ if(deckEl){
 }
 
 /* ---------- Bottom sheet (case study de un proyecto) ----------
-   Estado contraído (default): el .sheet es un card anclado al fondo de la
-   ventana, centrado, con un ancho máximo (~1000px) y un hueco arriba
-   (~6vh) que deja ver el fondo blureado. Tiene border-radius sólo en las
-   esquinas de arriba, un borde fino y una sombra suave hacia arriba.
-   Estado expandido (clase .full): pantalla completa — sin border-radius,
-   100% de ancho, sin hueco arriba. La transición (ancho / top /
-   border-radius) es puro CSS, ~0.3s.
-   El scroll interno del sheet dispara el cambio con HISTÉRESIS: expande al
-   pasar los 60px y recién contrae al bajar de los 40px, para que no titile
-   cuando el usuario queda justo en el límite. Toggleamos una sola clase
-   (.full), nunca estilos inline, y NO animamos transform/scale del layout:
-   el ancho se anima con el sheet aislado (`contain:layout paint` +
-   will-change, ver CSS) para que no haya reflow del fondo ni flash al
-   invertir el scroll. El botón de la esquina siempre cierra el sheet. */
-const EXPAND_AT=60;   // px de scroll para expandir a fullscreen
-const CONTRACT_AT=40; // px por debajo de los cuales vuelve a contraerse (histéresis)
+   El .sheet es un card anclado al fondo de la ventana, centrado, con un
+   ancho máximo (~1000px) y un hueco arriba (~6vh) que deja ver el fondo
+   blureado. Tiene border-radius sólo en las esquinas de arriba, un borde
+   fino y una sombra suave hacia arriba. Al scrollear mantiene siempre el
+   mismo tamaño (no se expande a pantalla completa): sólo scrollea su
+   contenido. El botón de la esquina siempre cierra el sheet. */
+const HINT_FADE=60;   // px de scroll en los que se desvanece el hint "scroll to explore"
 const sheet=document.getElementById('sheet'), backdrop=document.getElementById('backdrop');
 const sheetScroll=document.getElementById('sheetScroll'), closeBtn=document.getElementById('closeSheet');
 const scrollHint=document.getElementById('scrollHint');
@@ -228,17 +219,15 @@ function updateCloseLabel(){
 }
 function resetSheetShape(){
   scrollHint.style.opacity='1';
-  sheet.classList.remove('full');
 }
 function resetScrollPosition(){
   ignoreScroll=true;
   sheetScroll.scrollTop=0;
   requestAnimationFrame(()=>{ ignoreScroll=false; });
 }
-/* El scroll interno decide, a lo sumo una vez por frame, si el sheet está
-   contraído o expandido. La histéresis (EXPAND_AT / CONTRACT_AT) evita que
-   titile en el umbral. El "blur del fondo" es estático vía
-   `body.sheet-open .wrap` (ver CSS): scrollear no recalcula ningún blur. */
+/* El scroll interno sólo desvanece el hint, a lo sumo una vez por frame.
+   El "blur del fondo" es estático vía `body.sheet-open .wrap` (ver CSS):
+   scrollear no recalcula ningún blur. */
 let scrollTicking=false;
 function onSheetScroll(){
   if(ignoreScroll) return;
@@ -248,13 +237,7 @@ function onSheetScroll(){
 }
 function applyScrollProgress(){
   scrollTicking=false;
-  const y=sheetScroll.scrollTop;
-  const isFull=sheet.classList.contains('full');
-  if(!isFull && y>EXPAND_AT){ sheet.classList.add('full'); }
-  else if(isFull && y<CONTRACT_AT){ sheet.classList.remove('full'); }
-  /* El hint "scroll to explore" se apaga a medida que se entra en zona de
-     expansión y ya está apagado cuando el sheet queda fullscreen. */
-  scrollHint.style.opacity=String(Math.max(0, 1 - y/EXPAND_AT));
+  scrollHint.style.opacity=String(Math.max(0, 1 - sheetScroll.scrollTop/HINT_FADE));
 }
 function openSheet(i){
   current=i; render();
@@ -280,7 +263,7 @@ function closeSheet(){
   backdrop.classList.remove('open'); document.body.classList.remove('sheet-open'); document.body.style.overflow=''; play();
 }
 /* Al terminar el slide, sacamos will-change: en reposo el sheet NO es capa
-   GPU, así el salto a fullscreen (resize) es un repintado normal sin negro. */
+   GPU, así scrollear imágenes grandes no deja áreas en negro. */
 sheet.addEventListener('transitionend', e=>{ if(e.propertyName==='transform') sheet.classList.remove('animating'); });
 closeBtn.addEventListener('click',closeSheet);
 backdrop.addEventListener('click',closeSheet);
