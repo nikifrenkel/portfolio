@@ -53,13 +53,16 @@ function render(){
   cards.forEach((c,i)=>{
     let o=i-current; if(o>n/2)o-=n; if(o<-n/2)o+=n;
     const abs=Math.abs(o);
-    const x=o*(window.innerWidth<640?150:240);
-    const rotY=o===0?0:(o<0?42:-42);
-    const z=-abs*170, scale=o===0?1:0.82;
+    /* Sólo se ven 3 cards (la central y sus vecinas). El resto queda
+       escondido detrás de la central, y al avanzar sale desde ahí. */
+    const hidden=abs>1;
+    const x=hidden?0:o*(window.innerWidth<640?150:240);
+    const rotY=o===0||hidden?0:(o<0?42:-42);
+    const z=hidden?-400:-abs*170, scale=o===0?1:(hidden?0.7:0.82);
     c.style.transform=`translate(-50%,-50%) translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`;
-    c.style.opacity=abs>2?0:1;
+    c.style.opacity=hidden?0:1;
     c.style.filter=o===0?'none':'brightness(.92) saturate(.9)';
-    c.style.zIndex=50-abs; c.style.pointerEvents=abs>2?'none':'auto';
+    c.style.zIndex=50-abs; c.style.pointerEvents=hidden?'none':'auto';
   });
   dots.forEach((d,i)=>d.classList.toggle('active',i===current));
 }

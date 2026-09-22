@@ -65,7 +65,7 @@ const projects = [
     blurb_es:"Rediseño de la homepage de compra de Medicare hacia una experiencia de inscripción personalizada y lista para IA.",
     chips_en:["Simplify plan discovery","Reduce cognitive load","AI personalization","Boost recommendations"],
     chips_es:["Simplificar la búsqueda de planes","Reducir la carga cognitiva","Personalización con IA","Mejorar las recomendaciones"],
-    cta_en:"Project Overview", cta_es:"Resumen del proyecto" },
+    cta_en:"Explore the redesign", cta_es:"Explorar el rediseño" },
   { title:"Scalable Medicare Experience", role_en:"UX · US healthcare", role_es:"UX · salud EE.UU.",
     desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones clave y el resultado.",
@@ -76,7 +76,7 @@ const projects = [
     blurb_es:"Reconstruir cinco páginas de planes de Medicare de alto tráfico en un único sistema escalable y escaneable.",
     chips_en:["Scale experiences","Clarify complexity","Build reusable systems","Design for constraints"],
     chips_es:["Escalar experiencias","Clarificar la complejidad","Construir sistemas reutilizables","Diseñar con restricciones"],
-    cta_en:"Project Overview", cta_es:"Resumen del proyecto" },
+    cta_en:"Discover how it scales", cta_es:"Descubrir el sistema" },
   /* ===== PROYECTOS OCULTOS POR AHORA =====================================
      Estos 3 todavía no tienen su case study cargado, así que quedan afuera
      del carrusel. Para volver a mostrar uno: cortá su bloque de acá adentro
@@ -102,7 +102,7 @@ const projects = [
     blurb_es:"Diseñando un checkout B2B para escenarios de pago complejos.",
     chips_en:["Payment flows","Checkout design","Complex business rules","Edge cases"],
     chips_es:["Flujos de pago","Diseño de checkout","Reglas de negocio complejas","Casos borde"],
-    cta_en:"Project Overview", cta_es:"Resumen del proyecto" },
+    cta_en:"Dive into the payment flow", cta_es:"Conocer el flujo de pago" },
   { title:"Plant Care UX/UI Case Study", role_en:"UX/UI · Personal project", role_es:"UX/UI · Proyecto personal",
     desc_en:"A self-initiated UX/UI case study for a plant-care mobile app.",
     desc_es:"Un caso de estudio de UX/UI de iniciativa propia para una app de cuidado de plantas.",
@@ -164,11 +164,25 @@ const recommendations = [
     quote_en:"I truly enjoyed working with Nicole and greatly valued her partnership. She was thoughtful, collaborative, and consistently brought a positive attitude to the team. Nicole had a knack for bringing people together, asking insightful questions, and creating space for productive conversations. She also demonstrated strong leadership by guiding discussions with confidence, building alignment across teams, and helping others stay focused on shared goals. Her ability to build trust and foster collaboration made her an exceptional teammate and someone I genuinely enjoyed working with. I was grateful for her support, partnership, and the positive impact she had on those around her.",
     quote_es:"Disfruté mucho trabajar con Nicole y valoré enormemente su compañerismo. Fue reflexiva, colaborativa y siempre aportó una actitud positiva al equipo. Nicole tenía la habilidad de unir a las personas, hacer preguntas perspicaces y generar espacio para conversaciones productivas. También demostró un fuerte liderazgo guiando las discusiones con confianza, construyendo alineación entre equipos y ayudando a los demás a mantener el foco en los objetivos compartidos. Su capacidad para generar confianza y fomentar la colaboración la convirtió en una compañera excepcional y en alguien con quien realmente disfruté trabajar. Estuve agradecido por su apoyo, su compañerismo y el impacto positivo que tuvo en quienes la rodeaban." },
 
+  { name:"Gonzalo Agnelli",
+    role_en:"Sr. UX/CX Designer · Coworker at UHG",
+    role_es:"Sr. UX/CX Designer · Compañero en UHG",
+    quote_en:"I had the pleasure of working with Nicole for nearly two years at MentorMate, and I can confidently say she is one of the most thoughtful and dedicated designers I’ve worked with. Nicole consistently brings a high level of professionalism to everything she does. Her attention to detail is exceptional, and she always thinks beyond the interface, carefully considering how her work will impact users, teammates, and the overall product. One of the qualities I admire most about Nicole is her growth mindset. She’s always open to feedback, actively seeks opportunities to improve, and continuously pushes herself to become a better designer. At the same time, she’s incredibly approachable and genuinely cares about supporting her teammates, always looking for ways to help whenever needed. Beyond her design skills, Nicole is simply a great person to work with—kind, collaborative, and reliable. It was a pleasure working alongside her, and I would gladly do so again. I highly recommend Nicole to any team looking for a talented designer and an even better teammate.",
+    quote_es:"Tuve el placer de trabajar con Nicole durante casi dos años en MentorMate, y puedo decir con total confianza que es una de las diseñadoras más reflexivas y comprometidas con las que trabajé. Nicole aporta siempre un alto nivel de profesionalismo a todo lo que hace. Su atención al detalle es excepcional, y siempre piensa más allá de la interfaz, considerando cuidadosamente cómo su trabajo va a impactar en los usuarios, en sus compañeros y en el producto en general. Una de las cualidades que más admiro de Nicole es su mentalidad de crecimiento. Siempre está abierta al feedback, busca activamente oportunidades para mejorar y se exige constantemente para ser una mejor diseñadora. Al mismo tiempo, es increíblemente accesible y se preocupa de verdad por apoyar a sus compañeros, siempre buscando formas de ayudar cuando hace falta. Más allá de sus habilidades de diseño, Nicole es simplemente una gran persona para trabajar: amable, colaborativa y confiable. Fue un placer trabajar a su lado, y con gusto lo volvería a hacer. Recomiendo ampliamente a Nicole a cualquier equipo que busque una diseñadora talentosa y una compañera todavía mejor." },
+
+  { name:"Sue Dowd",
+    role_en:"SVP Retail Strategy + Advisory · Miller Zell",
+    role_es:"SVP Retail Strategy + Advisory · Miller Zell",
+    quote_en:"I can’t say enough about how great it has been to work with Nicole. She has served as a true extension of our team, turning our scattered thoughts and ambitious idea into a polished, professional, user-first demo. Her insights throughout the process were invaluable, helping us stay grounded while drawing on relevant precedents and best practices at every turn. We look forward to collaborating with her on future projects!",
+    quote_es:"No me alcanzan las palabras para decir lo genial que fue trabajar con Nicole. Funcionó como una verdadera extensión de nuestro equipo, transformando nuestras ideas dispersas y nuestra ambiciosa propuesta en una demo pulida, profesional y centrada en el usuario. Sus aportes a lo largo de todo el proceso fueron invaluables: nos ayudaron a mantener los pies sobre la tierra mientras nos apoyábamos en referentes relevantes y buenas prácticas en cada paso. ¡Esperamos seguir colaborando con ella en futuros proyectos!" },
+
+  /* OCULTA por ahora (volver a mostrar cuando haya otro testimonio):
   { name:"Magali Bitler",
     role_en:"UX/UI Designer · Coworker at Galicia Bank",
     role_es:"Diseñadora UX/UI · Compañera en Galicia Bank",
     quote_en:"Nicole not only has an enormous background of experience and knowledge, but she also stands out for always wanting to help others, both as a designer and as a coworker. She is a very hard worker and passionate about what she does, and it shows in the value she delivers.",
     quote_es:"Nicole no solo tiene una enorme trayectoria de experiencia y conocimiento, sino que además se destaca por querer siempre ayudar a los demás, tanto como diseñadora como compañera. Es muy trabajadora y apasionada por lo que hace, y eso se nota en el valor que entrega." },
+  */
 
   { name:"Johanna Sofia Peri",
     role_en:"Sr. UX/UI Designer · Coworker at Galicia Bank",
