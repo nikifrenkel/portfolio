@@ -53,15 +53,18 @@ function render(){
   cards.forEach((c,i)=>{
     let o=i-current; if(o>n/2)o-=n; if(o<-n/2)o+=n;
     const abs=Math.abs(o);
-    /* Sólo se ven 3 cards (la central y sus vecinas). El resto queda
-       escondido detrás de la central, y al avanzar sale desde ahí. */
-    const hidden=abs>1;
-    const x=hidden?0:o*(window.innerWidth<640?150:240);
-    const rotY=o===0||hidden?0:(o<0?42:-42);
-    const z=hidden?-400:-abs*170, scale=o===0?1:(hidden?0.7:0.82);
+    /* En pantallas anchas se ven 5 cards (la central + 2 de cada lado);
+       en angostas, 3 (la central y sus vecinas). El resto queda escondido
+       detrás de la central, y al avanzar sale desde ahí. */
+    const wide=window.innerWidth>=1000;
+    const hidden=abs>(wide?2:1);
+    const step=window.innerWidth<640?150:(wide?220:240);
+    const x=hidden?0:(abs===2?Math.sign(o)*step*1.75:o*step);
+    const rotY=o===0||hidden?0:(o<0?(abs===2?50:42):(abs===2?-50:-42));
+    const z=hidden?-400:-abs*170, scale=o===0?1:(hidden?0.7:(abs===2?0.68:0.82));
     c.style.transform=`translate(-50%,-50%) translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`;
     c.style.opacity=hidden?0:1;
-    c.style.filter=o===0?'none':'brightness(.92) saturate(.9)';
+    c.style.filter=o===0?'none':(abs===2?'brightness(.85) saturate(.85)':'brightness(.92) saturate(.9)');
     c.style.zIndex=50-abs; c.style.pointerEvents=hidden?'none':'auto';
   });
   dots.forEach((d,i)=>d.classList.toggle('active',i===current));

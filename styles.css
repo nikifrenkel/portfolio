@@ -590,6 +590,55 @@ body.sheet-open .wrap{ filter:blur(16px); }
   #csCobros .cb-flow img{ height:320px; }
 }
 
+/* ===================== DESIGN SYSTEM (multimarca + Split button UHC) =====================
+   Misma paleta que los otros case studies (.cs-custom). Wrappers de imagen
+   con fondo opaco (#fff) para evitar el flash negro; imgs con height:auto. */
+#csDesignSystem .ds-pair{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+#csDesignSystem .ds-three{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+#csDesignSystem .ds-three .stream{ display:flex; flex-direction:column; gap:8px; }
+#csDesignSystem .ds-three .on{ background:var(--dark); border-color:var(--dark); }
+#csDesignSystem .ds-three .on .t{ color:#fff; }
+#csDesignSystem .ds-three .on .d{ color:#e9e3da; }
+#csDesignSystem .ds-three .t{ margin:0; font-size:15px; font-weight:700; line-height:1.35; color:var(--ink); }
+#csDesignSystem .ds-three .d{ margin:0; font-size:13.5px; line-height:1.55; color:var(--sec); }
+/* Brand A + Brand B → un sistema / Primitivo → semántico → componente */
+#csDesignSystem .ds-chain{ display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; }
+#csDesignSystem .ds-chain > div{ background:#fff; border:.5px solid var(--border); border-radius:12px; padding:14px 18px; text-align:center; min-width:150px; }
+#csDesignSystem .ds-chain > div.on{ background:var(--brick); border-color:var(--brick); }
+#csDesignSystem .ds-chain > div.on p{ color:#fff; }
+#csDesignSystem .ds-chain > i{ font-style:normal; font-family:'Archivo',sans-serif; font-weight:700; font-size:20px; color:#D8A98F; }
+#csDesignSystem .ds-chain code{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; color:var(--ink); }
+#csDesignSystem .ds-chain > div.on code{ color:#fff; }
+/* Capas del sistema como pills */
+#csDesignSystem .ds-layers{ display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+#csDesignSystem .ds-layers > span{ background:#fff; border:.5px solid var(--border); border-radius:100px; padding:9px 16px; font-weight:700; font-size:13px; color:var(--ink); }
+#csDesignSystem .ds-layers > span b{ color:var(--brick); margin-right:4px; }
+#csDesignSystem .ds-layers > i{ font-style:normal; color:#D8A98F; font-size:15px; }
+/* Imágenes altas: ancho acotado y centradas */
+#csDesignSystem .ds-narrow{ max-width:460px; margin:0 auto; }
+#csDesignSystem .ds-phone{ max-width:280px; margin:0 auto; }
+/* Desktop + mobile lado a lado (la home en contexto) */
+#csDesignSystem .ds-context{ display:grid; grid-template-columns:3fr 1fr; gap:22px; align-items:start; }
+/* Grilla de criterios (accesibilidad, contenidos de la documentación) */
+#csDesignSystem .ds-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+#csDesignSystem .ds-grid .n{ margin:0 0 8px; font-family:'Archivo',sans-serif; font-size:20px; font-weight:800; color:var(--coral-lt); }
+#csDesignSystem .ds-grid .t{ margin:0 0 6px; font-size:14.5px; font-weight:700; line-height:1.4; color:var(--ink); }
+#csDesignSystem .ds-grid .d{ margin:0; font-size:13.5px; line-height:1.55; color:var(--sec); }
+/* Datos rápidos del hero */
+#csDesignSystem .ds-facts{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; max-width:860px; margin:0 auto 38px; }
+#csDesignSystem .ds-facts > div{ background:#fff; border:.5px solid var(--border); border-radius:12px; padding:14px 16px; }
+#csDesignSystem .ds-facts p{ margin:0; font-size:13px; line-height:1.45; color:var(--ink); font-weight:600; }
+/* Leyenda de la anatomía (requerido / recomendado / custom) */
+#csDesignSystem .ds-legend{ display:flex; flex-wrap:wrap; gap:10px 22px; justify-content:center; margin-top:14px; }
+#csDesignSystem .ds-legend span{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color:var(--sec); }
+#csDesignSystem .ds-legend i{ width:10px; height:10px; border-radius:2px; display:inline-block; }
+@media (max-width:760px){
+  #csDesignSystem .ds-pair,#csDesignSystem .ds-three,#csDesignSystem .ds-grid,#csDesignSystem .ds-context{ grid-template-columns:1fr; }
+  #csDesignSystem .ds-facts{ grid-template-columns:1fr 1fr; }
+  #csDesignSystem .ds-chain > i{ transform:rotate(90deg); }
+  #csDesignSystem .ds-chain{ flex-direction:column; }
+}
+
 /* ===================== PLANTITA — identidad verde =====================
    Mismo esqueleto que los otros case studies (clases .cs-custom); sólo
    redefinimos las variables de color para que TODO (klabel.brick, chips,
