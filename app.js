@@ -16,6 +16,7 @@
    ============================================================ */
 
 let lang='en', current=0, sheetOpen=false, timer=null, dragged=false, startX=null, projectsInView=false;
+const projTitle=p=>(lang==='es'&&p.title_es)||p.title;
 
 /* ---------- Carrusel ---------- */
 const stage=document.getElementById('stage'), dotsWrap=document.getElementById('dots');
@@ -28,7 +29,7 @@ projects.forEach((p,i)=>{
     <div class="cf-scrim"></div>
     <div class="cf-content">
       <div class="cf-eyebrow" data-en="${eyebrow_en}" data-es="${eyebrow_es}">${eyebrow_en}</div>
-      <div class="cf-name">${p.title}</div>
+      <div class="cf-name" data-en="${p.title}" data-es="${p.title_es||p.title}">${lang==="es"?(p.title_es||p.title):p.title}</div>
       ${p.blurb_en?`<div class="cf-blurb" data-en="${p.blurb_en}" data-es="${p.blurb_es}">${p.blurb_en}</div>`:''}
       ${chips?`<div class="cf-chips">${chips}</div>`:''}
       <button type="button" class="cf-cta" data-en="${cta_en}" data-es="${cta_es}">${cta_en}</button>
@@ -140,7 +141,7 @@ if(deckEl){
       <div class="cf-scrim"></div>
       <div class="cf-content">
         <div class="cf-eyebrow" data-en="${eyebrow_en}" data-es="${eyebrow_es}">${eyebrow_en}</div>
-        <div class="cf-name">${p.title}</div>
+        <div class="cf-name" data-en="${p.title}" data-es="${p.title_es||p.title}">${lang==="es"?(p.title_es||p.title):p.title}</div>
       </div>`;
     deckInner.appendChild(card);
     const dot=document.createElement('button'); dot.className='dot'; dot.type='button'; dot.tabIndex=-1;
@@ -217,7 +218,7 @@ function renderSheetText(){
   csGeneric.hidden=!!p.caseStudyEl;
   if(p.caseStudyEl) return;
   document.getElementById('sheetRole').textContent=lang==='es'?p.role_es:p.role_en;
-  document.getElementById('sheetTitle').textContent=p.title;
+  document.getElementById('sheetTitle').textContent=projTitle(p);
   document.getElementById('sheetStatement').textContent=lang==='es'?p.desc_es:p.desc_en;
 }
 function updateCloseLabel(){
@@ -279,8 +280,8 @@ sheetScroll.addEventListener('scroll',onSheetScroll);
    Los botones anterior/siguiente muestran el NOMBRE del proyecto destino. */
 function updateFooterNav(){
   const n=projects.length;
-  document.getElementById('footerPrevName').textContent=projects[(current-1+n)%n].title;
-  document.getElementById('footerNextName').textContent=projects[(current+1)%n].title;
+  document.getElementById('footerPrevName').textContent=projTitle(projects[(current-1+n)%n]);
+  document.getElementById('footerNextName').textContent=projTitle(projects[(current+1)%n]);
 }
 document.getElementById('footerTopBtn').addEventListener('click',()=>{
   sheetScroll.scrollTo({ top:0, behavior:'smooth' });
@@ -372,6 +373,7 @@ document.querySelectorAll('.lang button').forEach(btn=>{
     document.querySelectorAll('[data-en]').forEach(el=>{ el.innerHTML=el.dataset[lang]; });
     refreshRecoButtons();
     if(sheetOpen){ renderSheetText(); updateCloseLabel(); }
+    if(sheetOpen) updateFooterNav();
   });
 });
 

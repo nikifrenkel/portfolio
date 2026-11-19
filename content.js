@@ -16,7 +16,8 @@
    Para SACAR un proyecto: borrá su bloque { ... } entero (y su coma).
 
    Qué significa cada campo:
-     title    → título del proyecto (igual en los dos idiomas).
+     title    → título del proyecto en INGLÉS.
+     title_es → título del proyecto en ESPAÑOL (si falta, usa el de inglés).
      role_en  → subtítulo/rol en INGLÉS.
      role_es  → subtítulo/rol en ESPAÑOL.
      desc_en  → descripción larga en INGLÉS (se ve al abrir la card).
@@ -55,7 +56,7 @@
    ============================================================ */
 
 const projects = [
-  { title:"AI-Powered Medicare Shopping Experience", role_en:"UX · US healthcare", role_es:"UX · salud EE.UU.",
+  { title:"AI Medicare Shopping", title_es:"Compra de Medicare con IA", role_en:"UX · US healthcare", role_es:"UX · salud EE.UU.",
     desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones clave y el resultado.",
     caseStudyEl:"csMedicare",
@@ -66,7 +67,7 @@ const projects = [
     chips_en:["Simplify plan discovery","Reduce cognitive load","AI personalization","Boost recommendations"],
     chips_es:["Simplificar la búsqueda de planes","Reducir la carga cognitiva","Personalización con IA","Mejorar las recomendaciones"],
     cta_en:"Explore the redesign", cta_es:"Explorar el rediseño" },
-  { title:"Scalable Medicare Experience", role_en:"UX · US healthcare", role_es:"UX · salud EE.UU.",
+  { title:"Scalable Medicare Design", title_es:"Ecosistema Medicare Escalable", role_en:"UX · US healthcare", role_es:"UX · salud EE.UU.",
     desc_en:"Add the story here — the problem, your role and team, the key decisions and trade-offs, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol y equipo, las decisiones clave y el resultado.",
     caseStudyEl:"csShopPages",
@@ -92,7 +93,7 @@ const projects = [
     desc_en:"Add the story here — the problem, your role, key decisions, and the outcome.",
     desc_es:"Contá la historia acá — el problema, tu rol, las decisiones clave y el resultado." },
   ===== FIN PROYECTOS OCULTOS ===== */
-  { title:"B2B checkout for complex payment journeys", role_en:"UX/UI · B2B payments", role_es:"UX/UI · Pagos B2B",
+  { title:"B2B Payment Checkout", title_es:"Checkout de Pagos B2B", role_en:"UX/UI · B2B payments", role_es:"UX/UI · Pagos B2B",
     desc_en:"A B2B checkout for invoice collection with credit notes and Interbanking.",
     desc_es:"Un checkout B2B para el cobro de facturas con notas de crédito e Interbanking.",
     caseStudyEl:"csCobros",
@@ -103,7 +104,7 @@ const projects = [
     chips_en:["Payment flows","Checkout design","Complex business rules","Edge cases"],
     chips_es:["Flujos de pago","Diseño de checkout","Reglas de negocio complejas","Casos borde"],
     cta_en:"Dive into the payment flow", cta_es:"Conocer el flujo de pago" },
-  { title:"Building scalable design systems", role_en:"UI · Design systems", role_es:"UI · Design systems",
+  { title:"Design Systems", title_es:"Design Systems", role_en:"UI · Design systems", role_es:"UI · Design systems",
     desc_en:"Leading a multi-brand design system from scratch, and contributing a new component to UHC's enterprise design system.",
     desc_es:"Liderar un design system multimarca desde cero y sumar un componente nuevo al design system enterprise de UHC.",
     caseStudyEl:"csDesignSystem",
@@ -114,7 +115,18 @@ const projects = [
     chips_en:["Design tokens","Multi-brand theming","Component library","Developer handoff"],
     chips_es:["Design tokens","Theming multimarca","Librería de componentes","Handoff a desarrollo"],
     cta_en:"Explore the system", cta_es:"Explorar el sistema" },
-  { title:"Plant Care UX/UI Case Study", role_en:"UX/UI · Personal project", role_es:"UX/UI · Proyecto personal",
+  { title:"UX Research & Audit", title_es:"Research y Auditoría UX", role_en:"UX research · Holiday parks", role_es:"UX research · Parques vacacionales",
+    desc_en:"Stakeholder research and a heuristic evaluation of a holiday booking experience, turned into a prioritized roadmap.",
+    desc_es:"Research con stakeholders y una evaluación heurística de una experiencia de reservas vacacionales, convertidos en una hoja de ruta priorizada.",
+    caseStudyEl:"csUxResearch",
+    cover:"assets/case-studies/ux-research/cover.jpg", coverPos:"top center",
+    eyebrow_en:"Holiday parks · UX Research", eyebrow_es:"Parques vacacionales · UX Research",
+    blurb_en:"Uncovering usability gaps in a holiday booking experience.",
+    blurb_es:"Descubriendo problemas de usabilidad en una experiencia de reservas vacacionales.",
+    chips_en:["Stakeholder research","Heuristic evaluation","Severity scoring","Prioritized roadmap"],
+    chips_es:["Research con stakeholders","Evaluación heurística","Puntajes de severidad","Hoja de ruta priorizada"],
+    cta_en:"See the findings", cta_es:"Ver los hallazgos" },
+  { title:"Case Study · Plantita", title_es:"Plantita · Caso de estudio", role_en:"UX/UI · Personal project", role_es:"UX/UI · Proyecto personal",
     desc_en:"A self-initiated UX/UI case study for a plant-care mobile app.",
     desc_es:"Un caso de estudio de UX/UI de iniciativa propia para una app de cuidado de plantas.",
     caseStudyEl:"csPlantita", hideOnHome:true,

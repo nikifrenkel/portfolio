@@ -639,6 +639,51 @@ body.sheet-open .wrap{ filter:blur(16px); }
   #csDesignSystem .ds-chain{ flex-direction:column; }
 }
 
+/* ===================== UX RESEARCH (parques vacacionales, cliente anónimo) =====================
+   Mismo esqueleto .cs-custom. Etiquetas de impacto con los mismos colores
+   que las láminas (Low amarillo / Medium naranja / High rojo). */
+#csUxResearch .ux-facts{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:860px; margin:0 auto 38px; }
+#csUxResearch .ux-facts > div{ background:#fff; border:.5px solid var(--border); border-radius:12px; padding:14px 16px; }
+#csUxResearch .ux-facts p{ margin:0; font-size:13px; line-height:1.45; color:var(--ink); font-weight:600; }
+#csUxResearch .ux-two{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+#csUxResearch .ux-three{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+#csUxResearch .stream .n{ margin:0 0 8px; font-family:'Archivo',sans-serif; font-size:20px; font-weight:800; color:var(--coral-lt); }
+#csUxResearch .stream .t{ margin:0 0 6px; font-size:15px; font-weight:700; line-height:1.35; color:var(--ink); }
+#csUxResearch .stream .d{ margin:0; font-size:13.5px; line-height:1.55; color:var(--sec); }
+#csUxResearch .sev{ display:inline-flex; align-items:center; font-size:10px; letter-spacing:1.2px; font-weight:700; text-transform:uppercase; padding:4px 10px; border-radius:6px; white-space:nowrap; }
+#csUxResearch .sev.low{ background:#F6CB5A; color:#3d2a12; }
+#csUxResearch .sev.med{ background:#F29B38; color:#3d2a12; }
+#csUxResearch .sev.high{ background:#D24A35; color:#fff; }
+/* Recorrido Buscar → Parque → Alojamiento → Checkout */
+#csUxResearch .ux-steps{ display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+#csUxResearch .ux-steps > span{ background:#fff; border:.5px solid var(--border); border-radius:100px; padding:9px 16px; font-weight:700; font-size:13px; color:var(--ink); }
+#csUxResearch .ux-steps > span b{ color:var(--brick); margin-right:4px; }
+#csUxResearch .ux-steps > i{ font-style:normal; color:#D8A98F; font-size:15px; }
+/* Hallazgo → recomendación */
+#csUxResearch .ux-findings{ background:#fff; border:.5px solid var(--border); border-radius:14px; overflow:hidden; }
+#csUxResearch .ux-findings > div{ display:grid; grid-template-columns:1fr 1fr 70px; gap:18px; padding:16px 20px; align-items:start; }
+#csUxResearch .ux-findings > div + div{ border-top:.5px solid var(--border); }
+#csUxResearch .ux-findings .i{ margin:0; font-size:14px; line-height:1.5; color:var(--ink); }
+#csUxResearch .ux-findings .i b{ font-weight:700; }
+#csUxResearch .ux-findings .r{ margin:0; font-size:14px; line-height:1.5; color:var(--sec); }
+#csUxResearch .ux-findings .r::before{ content:"→ "; color:var(--brick); font-weight:700; }
+#csUxResearch .ux-findings .sev{ justify-self:end; }
+/* Antes / después del banner */
+#csUxResearch .ux-ba{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+#csUxResearch .ux-ba .box{ border-radius:12px; padding:18px 20px; }
+#csUxResearch .ux-ba .box p{ margin:0; }
+#csUxResearch .ux-ba .before{ background:#FBD9A0; }
+#csUxResearch .ux-ba .after{ background:#E3F1E1; }
+#csUxResearch .ux-ba .h{ font-size:15px; font-weight:700; line-height:1.35; color:#1d2b5c; margin-bottom:6px !important; }
+#csUxResearch .ux-ba .b{ font-size:13.5px; line-height:1.5; color:#33405f; }
+#csUxResearch .ux-narrow{ max-width:520px; margin:0 auto; }
+@media (max-width:760px){
+  #csUxResearch .ux-two,#csUxResearch .ux-three,#csUxResearch .ux-ba{ grid-template-columns:1fr; }
+  #csUxResearch .ux-facts{ grid-template-columns:1fr 1fr; }
+  #csUxResearch .ux-findings > div{ grid-template-columns:1fr; gap:8px; }
+  #csUxResearch .ux-findings .sev{ justify-self:start; grid-row:1; }
+}
+
 /* ===================== PLANTITA — identidad verde =====================
    Mismo esqueleto que los otros case studies (clases .cs-custom); sólo
    redefinimos las variables de color para que TODO (klabel.brick, chips,
